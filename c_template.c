@@ -15,32 +15,33 @@ Template file for all C source files.
 // NON-STANDARD LIBRARIES
 #include "adopic.h"
 
-//MACROS
+// MACROS
 #define True  1
 #define False 0
 
-//GLOBAL VARIABLES
+// GLOBAL VARIABLES
 bool boolean_result = False;
 
-//STRUCTURES
+// STRUCTURES
 typedef struct program_arguments{
+    // Used to contain information about the arguments passed to the program
     unsigned int argument_total_count;
     char **arguments;
 }PROGRAM_ARGUMENTS_t;
 
-//PROTOTYPES
-bool print_all_argv(PROGRAM_ARGUMENTS_t* given_program_arguments); // Short comment describing the function
+// PROTOTYPES
+bool print_all_argv(PROGRAM_ARGUMENTS_t*); // Short comment describing the function
 PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS(void); // Initializes a PROGRAM_ARGUMENTS_t structure
-void set_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t* program_arguments, unsigned int argc, char** argv); // Uses argc and argv to set values for program_arguments
-bool free_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t** program_arguments); // Used to set all fields to NULL and free the memory for a PROGRAM_ARGUMENTS_t struct
+void set_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t*, unsigned int, char**); // Uses argc and argv to set values for program_arguments
+bool free_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t**); // Used to set all fields to NULL and free the memory for a PROGRAM_ARGUMENTS_t struct
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
 
-    //LOCAL MEMORY
+    // LOCAL MEMORY
     bool successful = False;
 
-    //DYNAMIC MEMORY
+    // DYNAMIC MEMORY
     PROGRAM_ARGUMENTS_t* program_arguments;
     program_arguments = init_PROGRAM_ARGUMENTS();
     if(program_arguments != NULL){
@@ -61,19 +62,21 @@ int main(int argc, char** argv){
 
     printf("\n\n%s executed\n\n", argv[0]);
     return 0;
-}//END main
+}// END main
 
-//DEFINITIONS
+// DEFINITIONS
 bool print_all_argv(PROGRAM_ARGUMENTS_t* given_program_arguments){
 /*
-print_all_argv:
+bool print_all_argv:
     Prints all arguments passed to program.
 
-Input:  PROGRAM_ARGUMENTS_t* given_program_arguments:
-            Contains all arguments passed to program.
+Input:
+    PROGRAM_ARGUMENTS_t* given_program_arguments:
+        Contains all arguments passed to program.
 
-Output: bool True:
-            Returns 1 if execution was successful.
+Output:
+    bool True:
+        Returns 1 if execution was successful.
 */
 
     // LOCAL MEMORY
@@ -91,15 +94,17 @@ Output: bool True:
 
 PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS(){
 /*
-init_PROGRAM_ARGUMENTS:
+PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS:
     Initializes a PROGRAM_ARGUMENTS_t structure.
 
-Input:  void
+Input: void
 
-Output: PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
-            A malloced PROGRAM_ARGUMENTS_t structure.
+Output:
+    PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
+        A malloced PROGRAM_ARGUMENTS_t structure.
 */
-    //LOCAL MEMORY
+
+    // LOCAL MEMORY
     // None
 
     PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS = (PROGRAM_ARGUMENTS_t*) malloc(sizeof(PROGRAM_ARGUMENTS_t));
@@ -109,20 +114,22 @@ Output: PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
 
 void set_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t* program_arguments, unsigned int argc, char** argv){
 /*
-set_PROGRAM_ARGUMENTS:
+void set_PROGRAM_ARGUMENTS:
     Uses argc and argv to set the values in program_arguments
 
-Input:  PROGRAM_ARGUMENTS_t* program_arguments:
-            Will contain argc and argv values.
-        unsigned int argc:
-            Total number of arguments passed to the program.
-        char** argv:
-            The arguments passed to the program.
+Input:
+    PROGRAM_ARGUMENTS_t* program_arguments:
+        Will contain argc and argv values.
+    unsigned int argc:
+        Total number of arguments passed to the program.
+    char** argv:
+        The arguments passed to the program.
 
 Output: PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
         A malloced PROGRAM_ARGUMENTS_t structure.
 */
-    //LOCAL MEMORY
+
+    // LOCAL MEMORY
     // None
 
     program_arguments->argument_total_count = argc;
@@ -133,16 +140,19 @@ Output: PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
 
 bool free_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t** program_arguments){
 /*
-set_PROGRAM_ARGUMENTS:
+bool set_PROGRAM_ARGUMENTS:
     Uses argc and argv to set the values in program_arguments
 
-Input:  PROGRAM_ARGUMENTS_t* program_arguments:
-            The PROGRAM_ARGUMENTS_t structure to delete.
+Input:
+    PROGRAM_ARGUMENTS_t* program_arguments:
+        The PROGRAM_ARGUMENTS_t structure to delete.
 
-Output: bool True:
-            Returns 1 if execution was successful.
+Output:
+    bool True:
+        Returns 1 if execution was successful.
 */
-    //LOCAL MEMORY
+
+    // LOCAL MEMORY
     // None
 
     (*program_arguments)->argument_total_count = 0;
