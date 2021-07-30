@@ -327,7 +327,11 @@ typedef struct long_double_single_Node{
 }LONG_DOUBLE_SINGLE_NODE_t;
 
 // DEFINITIONS
-//STRING MAINTENANCE//STRING MAINTENANCE//STRING MAINTENANCE//STRING MAINTENANCE//STRING MAINTENANCE//STRING MAINTENANC
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//STRING MANAGEMENT
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool is_string_empty(char* string){
 /*
 bool is_string_empty:
@@ -340,6 +344,12 @@ Input:
 Output:
     bool result:
         True if string is empty, False otherwise.
+
+Example Usage:
+
+bool is_empty = False;
+is_string_empty = is_string_empty(some_string_pointer);
+
 */
 
     // LOCAL MEMORY
@@ -364,8 +374,11 @@ Output:
         The size of string.
 
 Example Usage:
+
 char buffer[256] = "\0";
+// Write something into buffer
 unsigned int size_of_string = length_of_string(buffer);
+
 */
 
     if(is_string_empty(string)) return 0;
@@ -397,6 +410,12 @@ Input:
 Output:
     bool result:
         True if target_char is found in string, else False.
+
+Example Usage:
+
+bool char_found = False;
+char_found = find_char(some_string_pointer, "X");
+
 */
 
     // LOCAL MEMORY
@@ -462,9 +481,12 @@ Output:
         The string with '\0' inserted.
 
 Example Usage:
+
 char buffer[256] = "\0";
+// Write something into buffer
 char *new_string;
 new_string = insert_null_char(buffer);
+
 */
 
     if(is_string_empty(string)) return NULL; // If *string is empty, return NULL
@@ -501,9 +523,12 @@ Output:
         The string converted to lowercase.
 
 Example Usage:
+
 char *new_string;
+// Write something into new_string
 char *first_word;
 first_word = copy_first_word(new_string);
+
 */
 
     if(is_string_empty(string) == True) return NULL; // If *string is empty, return NULL
@@ -542,9 +567,12 @@ Output:
         The string converted to lowercase.
 
 Example Usage:
+
 char *new_string;
+// Write something into new_string
 char *lowercase;
 lowercase = string_to_lowercase(new_string);
+
 */
 
     if(is_string_empty(string)) return NULL; // If *string is empty, return NULL
@@ -578,9 +606,12 @@ Output:
         The string converted to uppercase.
 
 Example Usage:
+
 char *new_string;
+// Write something into new_string
 char *uppercase;
 uppercase = string_to_uppercase(new_string);
+
 */
 
     if(is_string_empty(string)) return NULL; // If *string is empty, return NULL
@@ -601,7 +632,16 @@ uppercase = string_to_uppercase(new_string);
 
 }
 
-//VERIFY ARGV//VERIFY ARGV//VERIFY ARGV//VERIFY ARGV//VERIFY ARGV//VERIFY ARGV//VERIFY ARGV//VERIFY ARGV//VERIFY ARGV//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//COMMAND LINE ARGUMENT MANAGEMENT
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef struct program_arguments{
+    // Used to contain information about the arguments passed to the program
+    unsigned int argument_total_count;
+    char **arguments;
+}PROGRAM_ARGUMENTS_t;
+
 bool verify_argc(char argc, char *argv[]){
 /*
 bool verify_argc:
@@ -687,6 +727,7 @@ Output:
 
 Example Usage:
 int main(int argc, char** argv){
+
     FILE* file_stream = NULL;
     file_stream = verify_file_stream_pointer(argv[1]);
     if(file_stream != NULL) successful = True;
@@ -722,4 +763,159 @@ int main(int argc, char** argv){
     }
 
     return FILE_STREAM;
+}
+
+bool print_all_argv(PROGRAM_ARGUMENTS_t* given_program_arguments){
+/*
+bool print_all_argv:
+    Prints all arguments passed to program.
+
+Input:
+    PROGRAM_ARGUMENTS_t* given_program_arguments:
+        Contains all arguments passed to program.
+
+Output:
+    bool True:
+        Returns 1 if execution was successful.
+
+Example Usage:
+int main(int argc, char** argv){
+
+    // DYNAMIC MEMORY
+    PROGRAM_ARGUMENTS_t* program_arguments;
+    program_arguments = init_PROGRAM_ARGUMENTS();
+
+    set_PROGRAM_ARGUMENTS(program_arguments, argc, argv);
+    successful = print_all_argv(program_arguments);
+    if(successful){
+        printf("print_all_argv executed successfully.\n");
+    }
+    successful = False;
+
+    return 0;
+}
+*/
+
+    // LOCAL MEMORY
+    unsigned int arg_counter;
+
+    printf("Arguments passed to %s\n", given_program_arguments->arguments[0]);
+
+    for(arg_counter = 1; arg_counter < given_program_arguments->argument_total_count; arg_counter++){
+        printf("%s \n", given_program_arguments->arguments[arg_counter]);
+    }
+    printf("\n");
+
+    return True;
+}
+
+PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS(){
+/*
+PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS:
+    Initializes a PROGRAM_ARGUMENTS_t structure.
+
+Input: void
+
+Output:
+    PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
+        A malloced PROGRAM_ARGUMENTS_t structure.
+
+Example Usage:
+int main(int argc, char** argv){
+
+    // DYNAMIC MEMORY
+    PROGRAM_ARGUMENTS_t* program_arguments;
+    program_arguments = init_PROGRAM_ARGUMENTS();
+
+    return 0;
+}
+*/
+
+    // LOCAL MEMORY
+    // None
+
+    PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS = (PROGRAM_ARGUMENTS_t*) malloc(sizeof(PROGRAM_ARGUMENTS_t));
+
+    return new_PROGRAM_ARGUMENTS;
+}
+
+void set_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t* program_arguments, unsigned int argc, char** argv){
+/*
+void set_PROGRAM_ARGUMENTS:
+    Uses argc and argv to set the values in program_arguments
+
+Input:
+    PROGRAM_ARGUMENTS_t* program_arguments:
+        Will contain argc and argv values.
+    unsigned int argc:
+        Total number of arguments passed to the program.
+    char** argv:
+        The arguments passed to the program.
+
+Output: PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
+        A malloced PROGRAM_ARGUMENTS_t structure.
+
+Example Usage:
+int main(int argc, char** argv){
+
+    // DYNAMIC MEMORY
+    PROGRAM_ARGUMENTS_t* program_arguments;
+    program_arguments = init_PROGRAM_ARGUMENTS();
+
+    set_PROGRAM_ARGUMENTS(program_arguments, argc, argv);
+
+    return 0;
+}
+*/
+
+    // LOCAL MEMORY
+    // None
+
+    program_arguments->argument_total_count = argc;
+    program_arguments->arguments = argv;
+
+    return;
+}
+
+bool free_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t** program_arguments){
+/*
+bool free_PROGRAM_ARGUMENTS:
+    Frees memory reserved by program_arguments and sets to NULL for safety.
+
+Input:
+    PROGRAM_ARGUMENTS_t* program_arguments:
+        The PROGRAM_ARGUMENTS_t structure to delete.
+
+Output:
+    bool True:
+        Returns 1 if execution was successful.
+
+Example Usage:
+int main(int argc, char** argv){
+
+    // LOCAL MEMORY
+    bool successful = False;
+
+    // DYNAMIC MEMORY
+    PROGRAM_ARGUMENTS_t* program_arguments;
+    program_arguments = init_PROGRAM_ARGUMENTS();
+
+    successful = free_PROGRAM_ARGUMENTS(&program_arguments);
+    if(program_arguments == NULL && successful == True){
+        printf("Freed a PROGRAM_ARGUMENTS_t structure.\n");
+    }
+
+    return 0;
+}
+*/
+
+    // LOCAL MEMORY
+    // None
+
+    (*program_arguments)->argument_total_count = 0;
+    (*program_arguments)->arguments = 0;
+    (*program_arguments) = NULL;
+    free((*program_arguments));
+
+    return True;
 }

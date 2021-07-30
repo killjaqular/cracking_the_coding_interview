@@ -62,7 +62,7 @@ int main(int argc, char** argv){
 
     printf("\n\n%s executed\n\n", argv[0]);
     return 0;
-}// END main
+}
 
 // DEFINITIONS
 bool print_all_argv(PROGRAM_ARGUMENTS_t* given_program_arguments){
