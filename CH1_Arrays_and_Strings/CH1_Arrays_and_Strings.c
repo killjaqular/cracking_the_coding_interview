@@ -40,6 +40,7 @@ Chapter 1 Problems
 
 // STANDARD LIBRARIES
 #include <stdio.h>
+#include <unistd.h> // Used for sleep()
 
 // NON-STANDARD LIBRARIES
 #include "..\adopic.h"
@@ -93,6 +94,8 @@ int main(int argc, char** argv){
             buffer_insert++;
             if((strcmp(as_char, delimiter) == 0)){
                 // Process buffer
+                buffer[buffer_insert] = 0;
+                printf("\ncalling print_unique_chars.\n");
                 print_unique_chars(buffer);
                 printf("print_unique_chars executed.\n");
             }
@@ -107,14 +110,14 @@ int main(int argc, char** argv){
 }// END main
 
 // DEFINITIONS
-void print_unique_chars(char string[]){
+void print_unique_chars(char* string){
 /*
 void print_unique_chars: O(n^2)
     Prints all unique chars in string by comparing each char with all others and printing out char if no duplicate was
     found.
 
 Input:
-    char string[]:
+    char* string:
         The string to read for unique chars.
 
 Output: None
@@ -126,24 +129,13 @@ Example Usage:
 
     // LOCAL MEMORY
     bool found_duplicate = False; // Assume we have not found a duplicate
-    char* string_reader  = &string[0];
-    char* char_reader    = string_reader;
+    char* string_reader  = string;
 
-    putchar('\n');
-    while(strcmp(string_reader, "\0") != 0){
-        char_reader++; // Advance one char forward of string_reader to avoid comparing to itself
-
-        while(strcmp(char_reader, "\0") != 0){
-            if(string_reader == char_reader){
-                found_duplicate = True; // Set flag
-                break; // Stop search
-            }
-            char_reader++; // Advance to the next char to compare
-        }
-        if(found_duplicate == True) printf("%c, ", char_reader); // Print out the unique char
-
-        found_duplicate = False; // Reset the flag
-        char_reader = string_reader; // Reset char_reader
-        string_reader++; // Advance to new char to interogate
+    printf("\nUnique characters: [");
+    while(string_reader != "\0"){
+        printf("%c", string_reader);
+        sleep(1);
+        string_reader++;
     }
+    printf("]\n");
 }
