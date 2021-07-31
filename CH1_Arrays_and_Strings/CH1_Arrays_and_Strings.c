@@ -70,6 +70,7 @@ int main(int argc, char** argv){
 
     ////////////////////////////////////////////////////////////////
     // 1.1 Is Unique
+    printf("\n1.1: Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?\n");
     ////////////////////////////////////////////////////////////////
     // Open input file for test
     FILE* file_stream = NULL;
@@ -128,7 +129,7 @@ print_unique_chars(buffer);
 */
 
     // LOCAL MEMORY
-    bool found_duplicate = False; // Assume we have not found a duplicate
+    bool found_duplicate = False;  // Assume we have not found a duplicate
     char* string_reader  = string; // Begin at the first character
     char* char_reader    = string; // Begin at the first character
 
@@ -141,7 +142,7 @@ print_unique_chars(buffer);
 
             if(*string_reader == *char_reader){
                 found_duplicate = True; // Set flag
-                break; // Stop searching
+                break;                  // Stop searching
             }
             char_reader++;
         }
@@ -150,9 +151,9 @@ print_unique_chars(buffer);
             printf("%c", *string_reader);
         }
 
-        string_reader++; // Move to the next character in string to interogate
+        string_reader++;          // Move to the next character in string to interogate
         char_reader     = string; // Reset the pointer to the start
-        found_duplicate = False; // Reset flag
+        found_duplicate = False;  // Reset flag
     }
 
     printf("]\n");
