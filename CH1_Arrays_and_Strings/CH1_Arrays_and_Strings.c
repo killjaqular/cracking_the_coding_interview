@@ -57,7 +57,7 @@ Chapter 1 Problems
 // None
 
 // PROTOTYPES
-void print_unique_chars(char string[]);
+void print_unique_chars(char* string);
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
@@ -86,18 +86,15 @@ int main(int argc, char** argv){
     if(successful){
         putchar('\n');
         while(file_reader != EOF){
-            buffer_insert = 0; // Reset the buffer_insert to start writing to the buffer from index 0
             file_reader = getc(file_stream);
             as_char[0] = (char)file_reader;
-            putchar(file_reader);
             buffer[buffer_insert] = file_reader;
             buffer_insert++;
             if((strcmp(as_char, delimiter) == 0)){
                 // Process buffer
                 buffer[buffer_insert] = 0;
-                printf("\ncalling print_unique_chars.\n");
                 print_unique_chars(buffer);
-                printf("print_unique_chars executed.\n");
+                buffer_insert = 0; // Reset the buffer_insert to start writing to the buffer from index 0
             }
         }
     }
@@ -124,18 +121,42 @@ Output: None
 
 Example Usage:
 
+char buffer[MAX_BUFFER_SIZE] = "\0";
+// Write something into buffer
+print_unique_chars(buffer);
 
 */
 
     // LOCAL MEMORY
     bool found_duplicate = False; // Assume we have not found a duplicate
-    char* string_reader  = string;
+    char* string_reader  = string; // Begin at the first character
+    char* char_reader    = string; // Begin at the first character
 
+    printf("%s\n", string);
     printf("\nUnique characters: [");
-    while(string_reader != "\0"){
-        printf("%c", string_reader);
-        sleep(1);
-        string_reader++;
+    while(strcmp(string_reader, "\0") != 0){ // While we have not reached the end of the string,
+         char_reader++; // Move the char reader, one forward of string_reader to avoid comparing the char to itself
+
+        while(strcmp(char_reader, "\0") != 0){
+            if(string_reader == char_reader) char_reader++; // Avoid comparing the same chars
+
+            if(*string_reader == *char_reader){
+                found_duplicate = True; // Set flag
+                break; // Stop searching
+            }
+            char_reader++;
+        }
+
+        if(found_duplicate == False){
+            printf("'%c', ", *string_reader);
+        }
+
+        string_reader++; // Move to the next character in string to interogate
+        char_reader     = string; // Reset the pointer to the start
+        found_duplicate = False; // Reset flag
     }
+
     printf("]\n");
+
+    return;
 }
