@@ -40,7 +40,8 @@ Chapter 1 Problems
 
 // STANDARD LIBRARIES
 #include <stdio.h>
-#include <unistd.h> // Used for sleep()
+#include <ctype.h>
+
 
 // NON-STANDARD LIBRARIES
 #include "..\adopic.h"
@@ -57,7 +58,7 @@ Chapter 1 Problems
 // None
 
 // PROTOTYPES
-void print_unique_chars(char* string);
+bool all_unique_chars(char* string);
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
@@ -73,29 +74,50 @@ int main(int argc, char** argv){
     printf("\n1.1: Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?\n");
     ////////////////////////////////////////////////////////////////
     // Open input file for test
-    FILE* file_stream = NULL;
-    int file_reader = 0;
-    int char_reader = 0;
-    char delimiter[2] = ".\0";
-    char as_char[2] = "\0";
-    char buffer[MAX_BUFFER_SIZE] = "\0";
-    unsigned int buffer_insert = 0;
+    FILE* file_stream            = NULL;  // The input file
+    int file_reader              = 0;     // Steps through the input file
+    char delimiter[2]            = ".\0"; // Used to splice the input file
+    char as_char[2]              = "\0";  // Used to cast the read int as a char for comparison
+    char buffer[MAX_BUFFER_SIZE] = "\0";  // The buffer used to read in the input file
+    unsigned int buffer_insert   = 0;     // Used to step through the buffer
+    bool all_unique              = False; // Used to flag if all chars in a string are unique
+    bool new_line                = False; // Used to flag if one or more newlines were encountered reading file_stream
 
-    file_stream = verify_file_stream_pointer(argv[1]);
-    if(file_stream != NULL) successful = True;
+    file_stream = verify_file_stream_pointer(argv[1]); // Open the input file
+    if(file_stream != NULL) successful = True;         // Verify the file stream is valid
 
     if(successful){
         putchar('\n');
-        while(file_reader != EOF){
-            file_reader = getc(file_stream);
-            as_char[0] = (char)file_reader;
-            buffer[buffer_insert] = file_reader;
-            buffer_insert++;
-            if((strcmp(as_char, delimiter) == 0)){
+        while(file_reader != EOF){                 // If we haven't reached the end of the file,
+            file_reader = getc(file_stream);       // Get a char from the stream
+            as_char[0] = (char)file_reader;        // Cast it as a char to use as a comparison with another char
+
+            // Ignore newlines
+            new_line = False;                      // Reset the flag
+            while(strcmp(as_char, "\n") == 0){     // While we read newlines,
+                file_reader = getc(file_stream);   // Get a char from the stream
+                as_char[0] = (char)file_reader;    // Cast it as a char to use as a comparison with another char
+                new_line = True;
+            }
+
+            if((new_line == True) && (buffer_insert != 0)){ // If we read in newlines, one or more,
+                strcpy(&buffer[buffer_insert], " ");        // Insert a single space regardless of how many newlines were consumed
+                buffer_insert++;                            // Advance the inserter
+            }
+            buffer[buffer_insert] = file_reader;            // Write the new char into the buffer
+            buffer_insert++;                                // Advance the inserter
+
+            if((strcmp(as_char, delimiter) == 0)){ // If we read in a '.',
                 // Process buffer
-                buffer[buffer_insert] = 0;
-                print_unique_chars(buffer);
-                buffer_insert = 0; // Reset the buffer_insert to start writing to the buffer from index 0
+                buffer[buffer_insert] = '\0'; // Manually insert the null char at the end of the string
+                all_unique = all_unique_chars(buffer);
+                if(all_unique == True){
+                    printf("All unique characters.\n\n");
+                }else{
+                    printf("Not unique characters.\n\n");
+                }
+                all_unique = False; // Reset flag
+                buffer_insert = 0;  // Reset the buffer_insert to start writing to the buffer from index 0
             }
         }
     }
@@ -108,9 +130,9 @@ int main(int argc, char** argv){
 }// END main
 
 // DEFINITIONS
-void print_unique_chars(char* string){
+bool all_unique_chars(char* string){
 /*
-void print_unique_chars: O(n^2)
+void all_unique_chars: O(n^2)
     Prints all unique chars in string by comparing each char with all others and printing out char if no duplicate was
     found.
 
@@ -124,39 +146,42 @@ Example Usage:
 
 char buffer[MAX_BUFFER_SIZE] = "\0";
 // Write something into buffer
-print_unique_chars(buffer);
+all_unique_chars(buffer);
 
 */
 
     // LOCAL MEMORY
-    bool found_duplicate = False;  // Assume we have not found a duplicate
-    char* string_reader  = string; // Begin at the first character
-    char* char_reader    = string; // Begin at the first character
+    bool  all_unique    = True;   // Assume we have not found a duplicate
+    char* string_reader = string; // Begin at the first character
+    char* char_reader   = string; // Begin at the first character
 
     printf("%s\n", string);
-    printf("\nUnique characters: [");
-    while(strcmp(string_reader, "\0") != 0){ // While we have not reached the end of the string,
 
-        while(strcmp(char_reader, "\0") != 0){
-            if(string_reader == char_reader) char_reader++; // Avoid comparing the same chars
-
-            if(*string_reader == *char_reader){
-                found_duplicate = True; // Set flag
-                break;                  // Stop searching
+    while(strcmp(string_reader, "\0") != 0){   // While we have not reached the end of the string,
+        if(isspace(*string_reader)){   // If we found a space char
+            string_reader++;                   // Advance pointer
+            continue;                          // Restart search
+        }
+        while(strcmp(char_reader, "\0") != 0){                         // While we have not reached the end of the string,
+            if(strcmp(string_reader, char_reader) == 0) char_reader++; // Avoid comparing equal pointers
+            if(strcmp(char_reader, "\0") == 0) break;                  // We have reached the end of the string, stop
+            if(isspace(*char_reader)){                                 // If we found a space char
+                char_reader++;                                         // Advance pointer
+                continue;                                              // Restart search
             }
+
+            if(*string_reader == *char_reader){ // If we found matching chars
+                all_unique = False;             // Flip flag
+                break;                          // On the first duplicate found, stop search
+            }
+
             char_reader++;
         }
 
-        if(found_duplicate == False){
-            printf("%c", *string_reader);
-        }
-
-        string_reader++;          // Move to the next character in string to interogate
-        char_reader     = string; // Reset the pointer to the start
-        found_duplicate = False;  // Reset flag
+        if(all_unique == False) break; // On the first duplicate found, stop search
+        string_reader++;               // Move to the next character in string to interogate
+        char_reader = string;          // Reset char_reader to the beginning of string
     }
 
-    printf("]\n");
-
-    return;
+    return all_unique;
 }
