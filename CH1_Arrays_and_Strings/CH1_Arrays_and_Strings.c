@@ -135,7 +135,6 @@ print_unique_chars(buffer);
     printf("%s\n", string);
     printf("\nUnique characters: [");
     while(strcmp(string_reader, "\0") != 0){ // While we have not reached the end of the string,
-         char_reader++; // Move the char reader, one forward of string_reader to avoid comparing the char to itself
 
         while(strcmp(char_reader, "\0") != 0){
             if(string_reader == char_reader) char_reader++; // Avoid comparing the same chars
@@ -148,7 +147,7 @@ print_unique_chars(buffer);
         }
 
         if(found_duplicate == False){
-            printf("'%c', ", *string_reader);
+            printf("%c", *string_reader);
         }
 
         string_reader++; // Move to the next character in string to interogate
