@@ -13,7 +13,13 @@ Chapter 1 Problems
 
 1.2 Check Permutation: Given two strings, write a method to decide if one is a permutation of the other.
 
-1.3
+1.3 URLify: Write a method to replace all spaces in a string with '%20'. You may assume that the string has
+            sufficient space at the end to hold the additional charcters, and that you are given the "true"
+            length of the string. (Note: If implementing in Java, please use a character array so that you 
+            can perform this operation in place.)
+            Example: 
+                Input:  "Mr John Smith    ", 13
+                Output: "Mr%20John%20Smith"
 
 1.4
 
@@ -51,6 +57,7 @@ Chapter 1 Problems
 // PROTOTYPES
 bool is_unique(char* string); // Checks if all chars in string are unique
 bool check_permutation(char* left_string, char* right_string); // Checks if either string can be a permutation of the other
+void replace_char_in_place(char string[], unsigned int size, char* target_char, char* new_char); // Replaces chars in a string
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
@@ -63,127 +70,103 @@ int main(int argc, char** argv){
 
     ////////////////////////////////////////////////////////////////
     // 1.1 Is Unique
-    printf("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n");
-    printf("// 1.1 Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures? //\n");
-    printf("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n");
+    printf("///////////////////\n");
+    printf("// 1.1 Is Unique //\n");
+    printf("///////////////////\n");
     ////////////////////////////////////////////////////////////////
     FILE* file_stream            = NULL;  // The input file
-    int file_reader              = 0;     // Steps through the input file
-    char delimiter[2]            = ".\0"; // Used to splice the input file
-    char as_char[2]              = "\0";  // Used to cast the read int as a char for comparison
-    char buffer[MAX_BUFFER_SIZE] = "\0";  // The buffer used to read in the input file
-    unsigned short buffer_insert   = 0;   // Used to step through the buffer
+    char buffer[MAX_BUFFER_SIZE] = {0};   // The buffer used to read in the input file
     bool boolean_result          = False; // Used to flag if all chars in a string are unique
-    bool new_line                = False; // Used to flag if one or more newlines were encountered reading file_stream
+    bool is_stream_at_EOF        = False; // Tracks if input has reached end
 
     file_stream = verify_file_stream_pointer(argv[1]); // Open the input file
     if(file_stream != NULL) successful = True;         // Verify the file stream is valid
 
     if(successful){
         putchar('\n');
-        while(file_reader != EOF){           // If we haven't reached the end of the file,
-            file_reader = getc(file_stream); // Get a char from the stream
-            as_char[0] = (char)file_reader;  // Cast it as a char to use as a comparison with another char
+        // If we haven't reached the end of the file,
+        while(is_stream_at_EOF != True){ // Read from file, write to buffer
+            is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, NULL, ".");
+            if(is_stream_at_EOF == True) break; // Stop test
 
-            // Ignore newlines
-            new_line = False;                    // Reset the flag
-            while(strcmp(as_char, "\n") == 0){   // While we read newlines,
-                file_reader = getc(file_stream); // Get a char from the stream
-                as_char[0] = (char)file_reader;  // Cast it as a char to use as a comparison with another char
-                new_line = True;
-            }
+            boolean_result = is_unique(buffer);
 
-            if((new_line == True) && (buffer_insert != 0)){ // If we read in newlines, one or more,
-                strcpy(&buffer[buffer_insert], " ");        // Insert a single space regardless of how many newlines were consumed
-                buffer_insert++;                            // Advance the inserter
+            set_string_to_null(buffer, MAX_BUFFER_SIZE); // Reset the buffer after using it
+            if(boolean_result == True){
+                printf("All unique characters.\n\n");
+            }else{
+                printf("Not unique characters.\n\n");
             }
-            buffer[buffer_insert] = file_reader;            // Write the new char into the buffer
-            buffer_insert++;                                // Advance the inserter
-
-            if((strcmp(as_char, delimiter) == 0)){ // If we read in a '.',
-                // Process buffer
-                buffer[buffer_insert] = '\0';                // Manually insert the null char at the end of the string
-                boolean_result = is_unique(buffer);
-                set_string_to_null(buffer, MAX_BUFFER_SIZE); // Reset the buffer after using it
-                if(boolean_result == True){
-                    printf("All unique characters.\n\n");
-                }else{
-                    printf("Not unique characters.\n\n");
-                }
-                boolean_result = False;                      // Reset flag
-                buffer_insert = 0;                           // Reset the buffer_insert to start writing to the buffer from index 0
-            }
+            boolean_result = False; // Reset flag
         }
     }
     fclose(file_stream);
 
     ////////////////////////////////////////////////////////////////
     // 1.2 Check Permutation
-    printf("//////////////////////////////////////////////////////////////////////////////////////////////////////////////\n");
-    printf("// 1.2 Check Permutation: Given two strings, write a method to decide if one is a permutation of the other. //\n");
-    printf("//////////////////////////////////////////////////////////////////////////////////////////////////////////////\n");
+    printf("///////////////////////////\n");
+    printf("// 1.2 Check Permutation //\n");
+    printf("///////////////////////////\n");
     ////////////////////////////////////////////////////////////////
-    char right_string[MAX_BUFFER_SIZE] = {0};   // Another buffer used to read the second string
-    unsigned short permutation_insert  = 0;     // Used to insert into the right_string buffer
+    char right_string[MAX_BUFFER_SIZE] = {0}; // Another buffer used to read the second string
 
-    file_reader    = 0;       // Steps through the input file
-    buffer_insert  = 0;       // Used to step through the buffer
-    boolean_result = False;   // Used to flag if all chars in a string are unique
+    boolean_result   = False; // Used to flag if all chars in a string are unique
+    is_stream_at_EOF = False; // Tracks if input has reached end
 
     file_stream = verify_file_stream_pointer(argv[2]); // Open the input file
     if(file_stream != NULL) successful = True;         // Verify the file stream is valid
 
     if(successful){
         putchar('\n');
-        while(file_reader != EOF){               // If we haven't reached the end of the file,
-            file_reader = getc(file_stream);     // Get a char from the stream
-            as_char[0] = (char)file_reader;      // Cast it as a char to use as a comparison with another char
+        // If we haven't reached the end of the file,
+        while(is_stream_at_EOF != True){ // Read from file, write to buffer
+            is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, NULL, ".");
+            if(is_stream_at_EOF == True) break; // Stop test
+            is_stream_at_EOF = write_to_string(file_stream, right_string, MAX_BUFFER_SIZE, NULL, ".");
+            if(is_stream_at_EOF == True) break; // Stop test
 
-            // Consume all newlines and throw them away
-            while(strcmp(as_char, "\n") == 0){   // While we read newlines,
-                file_reader = getc(file_stream); // Get a char from the stream
-                as_char[0] = (char)file_reader;  // Cast it as a char to use as a comparison with another char
+            boolean_result = check_permutation(buffer, right_string);
+
+            set_string_to_null(buffer, MAX_BUFFER_SIZE);       // Clear buffer
+            set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear right_string
+
+            if(boolean_result == True){
+                printf("Valid Permutation.\n\n");
+            }else{
+                printf("Invalid Permutation.\n\n");
             }
+        }
+    }
+    fclose(file_stream);
 
-            buffer[buffer_insert] = file_reader; // Write the new char into the buffer
-            buffer_insert++;                     // Advance the inserter
+    ////////////////////////////////////////////////////////////////
+    // 1.3 Check Permutation
+    printf("////////////////\n");
+    printf("// 1.3 URLify //\n");
+    printf("////////////////\n");
+    ////////////////////////////////////////////////////////////////
+    unsigned int string_size     = 0;   // Used to measure buffer
 
-            if((strcmp(as_char, delimiter) == 0)){ // If we read in a '.',
-                // Process buffer
-                buffer[buffer_insert] = '\0';      // Manually insert the null char at the end of the string
+    boolean_result   = False; // Used to flag if all chars in a string are unique
+    is_stream_at_EOF = False; // Tracks if input has reached end
 
-                while(file_reader != EOF){               // If we haven't reached the end of the file,
-                    file_reader = getc(file_stream);     // Get a char from the stream
-                    as_char[0] = (char)file_reader;      // Cast it as a char to use as a comparison with another char
+    file_stream = verify_file_stream_pointer(argv[3]); // Open the input file
+    if(file_stream != NULL) successful = True;         // Verify the file stream is valid
 
-                    // Consume all newlines and throw them away
-                    while(strcmp(as_char, "\n") == 0){   // While we read newlines,
-                        file_reader = getc(file_stream); // Get a char from the stream
-                        as_char[0] = (char)file_reader;  // Cast it as a char to use as a comparison with another char
-                    }
+    if(successful){
+        putchar('\n');
+        // If we haven't reached the end of the file,
+        while(is_stream_at_EOF != True){ // Read from file, write to buffer
+            is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, "\"", "\"");
+            if(is_stream_at_EOF == True) break; // Stop test
+            string_size = length_of_string(buffer);
+            printf("<%d>\n", string_size);
 
-                    right_string[permutation_insert] = file_reader; // Write the new char into the buffer
-                    permutation_insert++;                           // Advance the inserter
+            replace_char_in_place(buffer, string_size, " ", "%20");
 
-                    if((strcmp(as_char, delimiter) == 0)){ // If we read in a '.',
-                        // Process buffer
-                        buffer[buffer_insert] = '\0';                      // Manually insert the null char at the end of the string
-                        boolean_result = check_permutation(buffer, right_string);
-                        set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear right_string
-                        set_string_to_null(buffer, MAX_BUFFER_SIZE);       // Clear buffer
+            set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
 
-                        if(boolean_result == True){
-                            printf("Valid Permutation.\n\n");
-                        }else{
-                            printf("Invalid Permutation.\n\n");
-                        }
-
-                        boolean_result = False; // Reset flag
-                        permutation_insert = 0; // Reset the buffer_insert to start writing to right_string from index 0
-                    }
-                }
-                buffer_insert = 0;              // Reset the buffer_insert to start writing to the buffer from index 0
-            }
+            printf("%s\n\n", buffer);
         }
     }
     fclose(file_stream);
@@ -195,6 +178,7 @@ int main(int argc, char** argv){
 // DEFINITIONS
 bool is_unique(char* string){
 /*
+ASSUMPTION: string has a '\0' char in it to stop the while loops.
 void is_unique: Time O(n^2), Space O(n); Where n is the length of string.
     Prints all unique chars in string by comparing each char with all others and printing out char if no duplicate was
     found.
@@ -281,30 +265,80 @@ boolean_result = check_permutation(string_a, string_b);
 
 */
 
-    if(length_of_string(left_string) < 1) return False;  // If left_string is less than 1 char
-    if(length_of_string(right_string) < 1) return False; // If right_string is less than 1 char
+    printf("%s\n", left_string);
+    printf("%s\n", right_string);
 
     // LOCAL MEMORY
-    unsigned short left_frequency[94]  = {0};          // Used to count the frequency of printable ASCII characters
-    unsigned short right_frequency[94] = {0};          // Used to count the frequency of printable ASCII characters
-    bool  is_permutation               = True;         // Assume True
-    char* right_reader                 = left_string;  // Begin at the first character
-    char* left_reader                  = right_string; // Begin at the first character
-    unsigned short look_up             = 0;            // Used to step through both char frequency arrays
+    unsigned short left_frequency[128]  = {0};                 // Used to count the frequency of printable ASCII characters
+    unsigned short right_frequency[128] = {0};                 // Used to count the frequency of printable ASCII characters
+    bool  is_permutation                = True;                // Assume True
+    unsigned short look_up              = 0;                   // Used to step through both char frequency arrays
+    unsigned short matches              = 0;                   // Checks if both strings frequencies match
+    unsigned int left_size   = length_of_string(left_string);  // Get size of left_string
+    unsigned int right_size  = length_of_string(right_string); // Get size of right_string
 
-    printf("%s\n", left_string);
-    while(strcmp(right_reader, "\0") != 0){   // While we have not reached the end of the string,
-        left_frequency[*right_reader - 32]++; // Account for the frequency
-        right_reader++;                       // Advance the pointer
+    if(left_size < 1)  return False;          // If left_string is less than 1 char
+    if(right_size < 1) return False;          // If right_string is less than 1 char
+    if(left_size != right_size) return False; // If the strings are not same size, can't be permutation
+
+    // Count the frequency of each char in each string
+    for(look_up = 0; look_up < left_size; look_up++){
+        left_frequency[left_string[look_up]]++;   // Account for the current ASCII char's frequency
+        right_frequency[right_string[look_up]]++; // Account for the current ASCII char's frequency
     }
 
-    printf("%s\n", right_string);
-    while(strcmp(left_reader, "\0") != 0){     // While we have not reached the end of the string,
-        right_frequency[*right_reader - 32]++; // Account for the frequency
-        left_reader++;                         // Advance the pointer
+    // Compare the frequencies of each char
+    for(look_up = 0; look_up < 128; look_up++){
+        if(left_frequency[look_up] == right_frequency[look_up]){ // If the frequency counted in both strings is the same,
+            matches++;// Track the frequency match
+        }else{ // If a single frequency doesn't match,
+            is_permutation = False;
+            break; // Stop search on the first mismatch
+        }
     }
 
-    //TODO: Step through both frequency arrays and determine if either string has enough chars to create the other
+    return is_permutation;
+}
 
-    return check_permutation;
+void replace_char_in_place(char string[], unsigned int size, char* target_char, char* new_char){
+/*
+ASSUMPTION: string must have enough space to contain all new_char being inserted for every target_char.
+            This also assumes that string has a "\0".
+void replace_char:
+    Replaces all instances of target_char in string with new_char.
+
+Input:
+    char string[]:
+        The string to read and write into.
+    unsigned int size:
+        The size of string. It is assumed to be the length of string + (length of new_char * however many target_char there are in string)
+    char* target_char:
+        The char in string to be replaced.
+    char* new_char:
+        The char to used to replace target_char.
+
+Output: None
+
+Example Usage:
+
+
+
+*/
+
+    // LOCAL MEMORY
+    unsigned int master; // Used to keep track where in the string we are reading
+    unsigned int push;   // Used to rewrite chars farther to the right when inserting a new_char replacement
+
+    if(size < 1) return; // Nothing to do if the string is size 0
+    if((target_char == NULL) || (new_char == NULL)) return; // If nothing is to be replaced
+
+    printf("<%s>\n", string);
+    for(master = size - 1; master >= 0; master--){
+        putchar(string[master]);
+        if(strcmp(&string[master], new_char) == 0){ // If we found a char to replace with new_char,
+            break;
+        }
+    }
+
+    return;
 }

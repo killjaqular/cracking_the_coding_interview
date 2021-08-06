@@ -362,6 +362,7 @@ is_string_empty = is_string_empty(some_string_pointer);
 
 unsigned int length_of_string(char *string){
 /*
+ASSUMPTION: string has a '\0' char in it to stop the while loops.
 unsigned int length_of_string:
     Returns the total number of chars in string before '\0' or '\n'
 
@@ -629,8 +630,180 @@ uppercase = string_to_uppercase(new_string);
     }
 
     return new_string;
-
 }
+
+void set_string_to_null(char string[], unsigned int size){
+/*
+void set_string_to_null:
+    Set all chars in string to NULL.
+
+Input:
+    char string[]:
+        The string to set to NULL.
+    unsigned int size:
+        The size of string.
+
+Output: None
+
+Example Usage:
+
+unsigned int SIZE = 100;
+char string[STRING_SIZE];
+// Write something into new_string
+string_to_uppercase(string, STRING_SIZE);
+
+*/
+
+    unsigned int counter; // Used to step through string
+    for(counter = 0;counter < size; counter++){
+        string[counter] = 0;
+    }
+
+    return;
+}
+
+bool write_to_string(FILE* input, char buffer[], unsigned int size, char *start_delimiter, char *end_delimiter){
+/*
+bool write_to_string:
+    Reads from input file pointer into buffer from the start of input until the first of these are found:
+        EOF, end_delimiter, reached maximum size of buffer.
+
+Input:
+    FILE* input:
+        The current position of the file pointer to read from.
+    char buffer[]:
+        The string to write into.
+    unsigned int size:
+        The maximum size of buffer.
+    char start_delimiter:
+        Used to start writing into buffer.
+    char end_delimiter:
+        Used to stop writing into buffer.
+
+Output:
+    bool reached_EOF:
+        True if input is ever at EOF.
+
+Example Usage:
+
+bool is_stream_at_EOF  = False;
+unsigned int SIZE      = 100;
+char char_array[SIZE]  = {0};
+char delimiter[2]      = '"\0'; // Used to splice the input file
+FILE* input = fopen("somefile.txt", "r");
+
+while(is_stream_at_EOF == False){
+    is_stream_at_EOF = write_to_string(input, char_array, SIZE, delimiter, delimiter);
+    printf("%s\n", char_array);   
+}
+
+*/
+
+    // LOCAL MEMORY
+    int reader          = 0;      // Steps through the input file
+    char as_char[2]     = "\0\0"; // Used to cast the read int as a char for comparison
+    unsigned int insert = 0;      // Used to insert into buffer
+    bool read_newline   = False;  // Flag for reading newlines
+    bool reached_EOF    = False;  // Flag to determine if EOF was reached reading input
+
+    if(input == NULL) return True; // If input stream is empty, return True
+
+    if(start_delimiter != NULL){       // Advance stream to the first start_delimiter found
+        while((strcmp(as_char, start_delimiter) != 0) && (reader != EOF)){
+            reader = getc(input);      // Grab a new char from stream
+            as_char[0] = (char)reader; // Change it into a char for comparison
+        }
+
+        if(reader == EOF){
+            reached_EOF = True; // Flip flag
+            return reached_EOF; // No start_delimiter found, do not write anything
+        }
+
+        buffer[insert] = reader; // Write into buffer
+        insert++;                // Increment inserter
+    }
+
+    while((reader != EOF) && (insert < size - 1)){ // While we haven't reached end of file or size of buffer
+        reader = getc(input);                      // Grab a new char from stream
+        as_char[0] = (char)reader;                 // Change it into a char for comparison
+
+        if(strcmp(as_char, "\n") == 0){    // Ignore any number of newlines
+            while((strcmp(as_char, "\n") == 0) && (reader != EOF)){
+                reader = getc(input);      // Grab a new char from stream
+                as_char[0] = (char)reader; // Change it into a char for comparison
+            }
+
+            if(reader == EOF){
+                reached_EOF = True; // Flip flag
+                break;              // No start_delimiter found, do not write anything
+            }
+
+            if(insert != 0){
+                strcpy(&buffer[insert], " "); // Write into buffer
+                insert++;                     // Increment inserter
+            }
+        }
+
+        if(end_delimiter != NULL){
+            if(strcmp(as_char, end_delimiter) == 0){
+                buffer[insert] = reader; // Write into buffer
+                insert++;                // Increment inserter
+                break;                   // Stop reading and writing
+            }
+        }
+
+        buffer[insert] = reader; // Write into buffer
+        insert++;                // Increment inserter
+    }
+
+    buffer[insert] = 0;
+
+    if(reader == EOF) reached_EOF = True; // If we reached EOF
+
+    return reached_EOF;
+}
+
+// TODO: Finish this function
+void replace_char_new_string(char* original_string, char* old_char, char new_string[], unsigned int new_string_size, char* new_char){
+/*
+void replace_char_new_string:
+    Replaces all instances of old_char in original_string with new_char making new_string
+
+Input:
+    char* original_string:
+        The original string.
+        ASSUMPTION: This string must be terminated with '\0'.
+    char* old_char:
+        The char to replace in original_string.
+    char new_string[]:
+        A new string with old_char replaced with new_char.
+    unsigned int new_string_size:
+        The size of new_string.
+    char* new_char:
+        The char to replace old_char in new_string.
+
+Output: None
+
+Example Usage:
+
+unsigned int SIZE = 100;
+unsigned int NEW_SIZE = 200;
+char old_string[SIZE] = {0};
+char new_string[NEW_SIZE] = {0};
+// Write into old_string
+// Write into new_string
+char target_char[2] = " \0";
+
+*/
+
+    // LOCAL MEMORY
+    unsigned int insert;
+
+    // TODO: finish this boi
+
+    return;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //COMMAND LINE ARGUMENT MANAGEMENT
