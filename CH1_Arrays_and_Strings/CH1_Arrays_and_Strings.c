@@ -57,7 +57,7 @@ Chapter 1 Problems
 // PROTOTYPES
 bool is_unique(char* string); // Checks if all chars in string are unique
 bool check_permutation(char* left_string, char* right_string); // Checks if either string can be a permutation of the other
-void replace_char_in_place(char string[], unsigned int size, char* target_char, char* new_char); // Replaces chars in a string
+void replace_space_with_string(char string[], unsigned int size, char* target_char, char* new_chars); // Replaces chars in a string
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
@@ -158,11 +158,11 @@ int main(int argc, char** argv){
         // If we haven't reached the end of the file,
         while(is_stream_at_EOF != True){ // Read from file, write to buffer
             is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, "\"", "\"");
-            if(is_stream_at_EOF == True) break; // Stop test
             string_size = length_of_string(buffer);
-            printf("<%d>\n", string_size);
+            if(is_stream_at_EOF == True) break; // Stop test
 
-            replace_char_in_place(buffer, string_size, " ", "%20");
+            replace_space_with_string(buffer, string_size, " ", "%20");
+            printf("%s\n", buffer);
 
             set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
 
@@ -269,52 +269,46 @@ boolean_result = check_permutation(string_a, string_b);
     printf("%s\n", right_string);
 
     // LOCAL MEMORY
-    unsigned short left_frequency[128]  = {0};                 // Used to count the frequency of printable ASCII characters
-    unsigned short right_frequency[128] = {0};                 // Used to count the frequency of printable ASCII characters
+    unsigned short frequency[128]       = {0};                 // Used to count the frequency of printable ASCII characters
     bool  is_permutation                = True;                // Assume True
     unsigned short look_up              = 0;                   // Used to step through both char frequency arrays
-    unsigned short matches              = 0;                   // Checks if both strings frequencies match
     unsigned int left_size   = length_of_string(left_string);  // Get size of left_string
     unsigned int right_size  = length_of_string(right_string); // Get size of right_string
 
-    if(left_size < 1)  return False;          // If left_string is less than 1 char
-    if(right_size < 1) return False;          // If right_string is less than 1 char
     if(left_size != right_size) return False; // If the strings are not same size, can't be permutation
 
-    // Count the frequency of each char in each string
+    // Count the frequency of each char in left_string
     for(look_up = 0; look_up < left_size; look_up++){
-        left_frequency[left_string[look_up]]++;   // Account for the current ASCII char's frequency
-        right_frequency[right_string[look_up]]++; // Account for the current ASCII char's frequency
+        frequency[left_string[look_up]]++; // Account for the current ASCII char's frequency
     }
 
-    // Compare the frequencies of each char
-    for(look_up = 0; look_up < 128; look_up++){
-        if(left_frequency[look_up] == right_frequency[look_up]){ // If the frequency counted in both strings is the same,
-            matches++;// Track the frequency match
-        }else{ // If a single frequency doesn't match,
-            is_permutation = False;
-            break; // Stop search on the first mismatch
+    // Count the frequency of each char in right_string
+    for(look_up = 0; look_up < left_size; look_up++){
+        if(frequency[right_string[look_up]] <= 0){ // If we ever use more than we have,
+            is_permutation = False;                // Cannot be a permutation
+            break;                                 // Stop search
         }
+        frequency[right_string[look_up]]--; // Consume a char from the frequency of left_string
     }
 
     return is_permutation;
 }
 
-void replace_char_in_place(char string[], unsigned int size, char* target_char, char* new_char){
+void replace_space_with_string(char string[], unsigned int size, char* target_char, char* new_chars){
 /*
-ASSUMPTION: string must have enough space to contain all new_char being inserted for every target_char.
-            This also assumes that string has a "\0".
-void replace_char:
-    Replaces all instances of target_char in string with new_char.
+ASSUMPTION: string must have enough space to contain all new_chars being inserted for every space.
+            This also assumes that string has a "\0" to terminate.
+void replace_space_with_string:
+    Replaces all instances a space in string with new_chars.
 
 Input:
     char string[]:
         The string to read and write into.
     unsigned int size:
-        The size of string. It is assumed to be the length of string + (length of new_char * however many target_char there are in string)
+        The size of string. It is assumed to be the length of string + (length of new_chars * however many target_char there are in string)
     char* target_char:
         The char in string to be replaced.
-    char* new_char:
+    char* new_chars:
         The char to used to replace target_char.
 
 Output: None
@@ -326,17 +320,37 @@ Example Usage:
 */
 
     // LOCAL MEMORY
-    unsigned int master; // Used to keep track where in the string we are reading
-    unsigned int push;   // Used to rewrite chars farther to the right when inserting a new_char replacement
+    unsigned int master = 0;          // Used to keep track where in the string we are reading
+    unsigned int pull = 0;            // Used to rewrite chars farther to the right when inserting a new_chars replacement
+    unsigned int new_chars_size = 0;  // Size of the new string to replace spaces
+    unsigned int new_char_insert = 0; // Used to insert into string
+    char* new_char_reader;            // Used to read the new_chars string
+    unsigned int temp = 0;            // Used to shift each char new_chars_size spaces to the right
 
     if(size < 1) return; // Nothing to do if the string is size 0
-    if((target_char == NULL) || (new_char == NULL)) return; // If nothing is to be replaced
+    if((target_char == NULL) || (new_chars == NULL)) return; // If nothing is to be replaced
 
-    printf("<%s>\n", string);
-    for(master = size - 1; master >= 0; master--){
-        putchar(string[master]);
-        if(strcmp(&string[master], new_char) == 0){ // If we found a char to replace with new_char,
-            break;
+    new_chars_size = length_of_string(new_chars);
+
+    printf("%s\n", string);
+
+    for(master = 0; master < size; master++){
+        if(string[master] == 32){ // 32 is " " (blank space) in the ASCII table
+            // Move all chars to avoid overwritting
+            for(temp = 1; temp < new_chars_size; temp++){
+                for(pull = size - 2; pull > master + 1; pull--){
+                    string[pull] = string[pull - 1];
+                }
+            }
+
+            // Insert new_chars
+            new_char_reader = new_chars; // Set the reader at the beginning
+            new_char_insert = master;    // Start where the space was found
+            while(strcmp(new_char_reader, "\0") != 0){                // While we read each char in new_chars,
+                string[new_char_insert] = *new_char_reader; // Write into string
+                new_char_reader++;                          // Advance pointer
+                new_char_insert++;
+            }
         }
     }
 
