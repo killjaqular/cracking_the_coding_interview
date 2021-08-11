@@ -332,7 +332,7 @@ typedef struct long_double_single_Node{
 //STRING MANAGEMENT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool is_string_empty(char* string){
+bool is_string_empty(const char* string){
 /*
 bool is_string_empty:
     Checks if string is empty.
@@ -360,7 +360,7 @@ is_string_empty = is_string_empty(some_string_pointer);
     return result;
 }
 
-unsigned int length_of_string(char *string){
+unsigned int length_of_string(const char* string){
 /*
 ASSUMPTION: string has a '\0' char in it to stop the while loops.
 unsigned int length_of_string:
@@ -385,7 +385,7 @@ unsigned int size_of_string = length_of_string(buffer);
     if(is_string_empty(string)) return 0;
 
     // LOCAL MEMORY
-    char *original_string_reader = string;
+    const char *original_string_reader = string;
     unsigned int size = 0;
 
     while((*original_string_reader != '\0') && (*original_string_reader != '\n')){
@@ -662,7 +662,7 @@ string_to_uppercase(string, STRING_SIZE);
     return;
 }
 
-bool write_to_string(FILE* input, char buffer[], unsigned int size, char *start_delimiter, char *end_delimiter){
+bool write_to_string(FILE* input, char buffer[], unsigned int size, const char *start_delimiter, const char *end_delimiter){
 /*
 bool write_to_string:
     Reads from input file pointer and writes into buffer from the start of input until the first of these are found:

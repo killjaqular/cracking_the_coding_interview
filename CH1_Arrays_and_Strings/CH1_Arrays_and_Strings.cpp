@@ -3,7 +3,7 @@ Adonay Pichardo, adonaypichardo@gmail.com
 github.com/killjaqular
 
 @file
-CH1_Arrays_and_Strings.c
+CH1_Arrays_and_Strings.cpp
 
 @description
 Cracking the Coding Interview:
@@ -424,7 +424,15 @@ Output:
 
 Example Usage:
 
-
+is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, NULL, "\n");
+if(is_stream_at_EOF == True) break; // Stop test
+boolean_result = palindrome_permutation(buffer);
+set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+if(boolean_result == True){
+    printf("Palindrome Permutations possible.\n\n");
+}else{
+    printf("Palindrome Permutations impossible.\n\n");
+}
 
 */
 
