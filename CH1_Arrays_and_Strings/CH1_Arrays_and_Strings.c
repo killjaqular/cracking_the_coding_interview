@@ -31,7 +31,14 @@ Chapter 1 Problems
                 Output: True
                 Permutations: "taco cat", "atco cta", etc...
 
-1.5
+1.5 One Away: There are three type of edits that can be performed on strings: insert a character, remove a character,
+              or replace a character. Given two strings, write a function to check if they are one edit (or zero edits)
+              away.
+            Example:
+                pale, ple   -> true
+                pales, pale -> true
+                pale, bale  -> true
+                pale, bake  -> true
 
 1.6
 
@@ -66,6 +73,7 @@ bool is_unique(char* string); // Checks if all chars in string are unique
 bool check_permutation(const char* left_string, const char* right_string); // Checks if strings are mutual permutations
 void URLify(char string[], unsigned int size, const char* new_chars); // Replaces spaces in a string
 bool palindrome_permutation(const char* string); // Checks if a palindrome permutation is possible
+bool one_away(const char* original, const char* string); // Checks if string is no more than 1 edit away from original
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
@@ -94,7 +102,7 @@ int main(int argc, char** argv){
         putchar('\n');
         // If we haven't reached the end of the file,
         while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, NULL, ".");
+            is_stream_at_EOF = write_to_buffer(file_stream, buffer, MAX_BUFFER_SIZE, NULL, ".");
             if(is_stream_at_EOF == True) break; // Stop test
 
             boolean_result = is_unique(buffer);
@@ -128,9 +136,9 @@ int main(int argc, char** argv){
         putchar('\n');
         // If we haven't reached the end of the file,
         while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, NULL, ".");
+            is_stream_at_EOF = write_to_buffer(file_stream, buffer, MAX_BUFFER_SIZE, NULL, ".");
             if(is_stream_at_EOF == True) break; // Stop test
-            is_stream_at_EOF = write_to_string(file_stream, right_string, MAX_BUFFER_SIZE, NULL, ".");
+            is_stream_at_EOF = write_to_buffer(file_stream, right_string, MAX_BUFFER_SIZE, NULL, ".");
             if(is_stream_at_EOF == True) break; // Stop test
 
             boolean_result = check_permutation(buffer, right_string);
@@ -165,7 +173,7 @@ int main(int argc, char** argv){
         putchar('\n');
         // If we haven't reached the end of the file,
         while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, "\"", "\"");
+            is_stream_at_EOF = write_to_buffer(file_stream, buffer, MAX_BUFFER_SIZE, "\"", "\"");
             string_size = length_of_string(buffer);
             if(is_stream_at_EOF == True) break; // Stop test
 
@@ -195,7 +203,7 @@ int main(int argc, char** argv){
         putchar('\n');
         // If we haven't reached the end of the file,
         while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            is_stream_at_EOF = write_to_string(file_stream, buffer, MAX_BUFFER_SIZE, NULL, "\n");
+            is_stream_at_EOF = write_to_buffer(file_stream, buffer, MAX_BUFFER_SIZE, NULL, "\n");
             if(is_stream_at_EOF == True) break; // Stop test
 
             boolean_result = palindrome_permutation(buffer);
@@ -206,6 +214,40 @@ int main(int argc, char** argv){
                 printf("Palindrome Permutations possible.\n\n");
             }else{
                 printf("Palindrome Permutations impossible.\n\n");
+            }
+        }
+    }
+    fclose(file_stream);
+
+    ////////////////////////////////////////////////////////////////
+    // 1.4 Palindrome Permutation
+    printf("//////////////////\n");
+    printf("// 1.5 One Away //\n");
+    printf("//////////////////\n");
+    ////////////////////////////////////////////////////////////////
+    boolean_result   = False; // Used to flag if all chars in a string are unique
+    is_stream_at_EOF = False; // Tracks if input has reached end
+
+    file_stream = verify_file_stream_pointer(argv[5]); // Open the input file
+    if(file_stream != NULL) successful = True;         // Verify the file stream is valid
+
+    if(successful){
+        putchar('\n');
+        // If we haven't reached the end of the file,
+        while(is_stream_at_EOF != True){ // Read from file, write to buffer
+            is_stream_at_EOF = write_to_buffer(file_stream, buffer, MAX_BUFFER_SIZE, NULL, " ");
+            is_stream_at_EOF = write_to_buffer(file_stream, right_string, MAX_BUFFER_SIZE, NULL, " ");
+            if(is_stream_at_EOF == True) break; // Stop test
+
+            boolean_result = one_away(buffer, right_string);
+
+            set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+            set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear buffer
+
+            if(boolean_result == True){
+                printf("True.\n\n");
+            }else{
+                printf("False.\n\n");
             }
         }
     }
@@ -424,7 +466,15 @@ Output:
 
 Example Usage:
 
-
+unsigned int MAX_SIZE  = 100;
+char* buffer[MAX_SIZE] = {0};
+// Write into buffer
+bool boolean_result = palindrome_permutation(buffer);
+if(boolean_result == True){
+    printf("Palindrome Permutations possible.\n\n");
+}else{
+    printf("Palindrome Permutations impossible.\n\n");
+}
 
 */
 
@@ -483,4 +533,40 @@ Example Usage:
     }
 
     return result;
+}
+
+bool one_away(const char* original, const char* string){
+/*
+ASSUMPTION: original and string has a '\0' char in it to stop the while loops.
+bool one_away:
+    Checks if string is no more than one edit away from original.
+
+Input:
+    char* original:
+        The original string.
+    char* string:
+        The string to test against original.
+
+Output:
+    bool result:
+        Returns True if string is one edit away from being original.
+
+Example Usage:
+
+
+
+*/
+
+    printf("<%s> <%s>\n", original, string);
+
+    // LOCAL MEMORY
+    unsigned int len_original            = length_of_string(original);
+    unsigned int len_string              = length_of_string(string);
+    unsigned int original_frequency[128] = {0}; // Used to count the ASCII char frequency of original
+    unsigned int string_frequency[128]   = {0}; // Used to count the ASCII char frequency of string
+
+    // CHECKS
+    if(abs(len_original - len_string) > 1) return False; // If the difference in length is greater than 1, return False.
+
+    return True;
 }
