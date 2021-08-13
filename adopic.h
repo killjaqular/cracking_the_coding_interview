@@ -662,9 +662,9 @@ string_to_uppercase(string, STRING_SIZE);
     return;
 }
 
-bool write_to_string(FILE* input, char buffer[], unsigned int size, const char *start_delimiter, const char *end_delimiter){
+bool write_to_buffer(FILE* input, char buffer[], unsigned int size, const char *start_delimiter, const char *end_delimiter){
 /*
-bool write_to_string:
+bool write_to_buffer:
     Reads from input file pointer and writes into buffer from the start of input until the first of these are found:
         end_delimiter, reached maximum size of buffer, EOF.
 
@@ -693,8 +693,8 @@ char delimiter[2]      = '"\0'; // Used to splice the input file
 FILE* input = fopen("somefile.txt", "r");
 
 while(is_stream_at_EOF == False){
-    is_stream_at_EOF = write_to_string(input, char_array, SIZE, delimiter, delimiter);
-    printf("%s\n", char_array);   
+    is_stream_at_EOF = write_to_buffer(input, char_array, SIZE, delimiter, delimiter);
+    printf("%s\n", char_array);
 }
 
 */
@@ -795,7 +795,11 @@ while(is_stream_at_EOF == False){
         insert++;                // Increment inserter
     }
 
-    buffer[insert] = 0;
+    if(isspace(buffer[insert - 1])){
+        buffer[--insert] = 0; // Overwrite the whitespace char at end
+    }else{
+        buffer[insert] = 0;
+    }
 
     if(reader == EOF) reached_EOF = True; // If we reached EOF
 
