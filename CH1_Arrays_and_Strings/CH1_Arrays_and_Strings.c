@@ -60,7 +60,8 @@ Chapter 1 Problems
 // MACROS
 #define True  1
 #define False 0
-#define MAX_BUFFER_SIZE 512
+#define MAX_BUFFER_SIZE 100
+#define CHAR_TABLE      128 // 128 Printable characters in the ASCII table
 
 // GLOBAL VARIABLES
 // None
@@ -353,7 +354,7 @@ boolean_result = check_permutation(string_a, string_b);
     // None
 
     // LOCAL MEMORY
-    unsigned short frequency[128]       = {0};                 // Used to count the frequency of printable ASCII characters
+    unsigned short frequency[CHAR_TABLE]       = {0};                 // Used to count the frequency of printable ASCII characters
     bool  is_permutation                = True;                // Assume True
     unsigned short look_up              = 0;                   // Used to step through both char frequency arrays
     unsigned int left_size   = length_of_string(left_string);  // Get size of left_string
@@ -484,7 +485,7 @@ if(boolean_result == True){
     // LOCAL MEMORY
     bool result                   = True;   // Assume we can create a palindrome permutation
     const char* string_reader     = string; // Read string from start
-    unsigned short frequency[128] = {0};    // Used to count the frequency of printable ASCII characters
+    unsigned short frequency[CHAR_TABLE] = {0};    // Used to count the frequency of printable ASCII characters
     unsigned int counter          = 0;      // Used to step through the frequency table
     bool even_chars               = True;   // Checks if there is an even number of chars in string, assume True
     unsigned int string_length    = 0;      // How many chars in string
@@ -513,7 +514,7 @@ if(boolean_result == True){
     // We have assumed that string has valid palindrome permutations.
     // There are two cases we must check to refute that.
     ////////////////////////////////////////////////////////////////
-    for(counter = 0; counter < 128; counter++){
+    for(counter = 0; counter < CHAR_TABLE; counter++){
         if((frequency[counter] == 1) && (single_frequency == False)){
             single_frequency = True;
             continue;
@@ -539,7 +540,7 @@ bool one_away(const char* original, const char* string){
 /*
 ASSUMPTION: original and string has a '\0' char in it to stop the while loops.
 bool one_away:
-    Checks if string is no more than one edit away from original.
+    Checks if string is one or less edits away from original.
 
 Input:
     char* original:
@@ -549,24 +550,70 @@ Input:
 
 Output:
     bool result:
-        Returns True if string is one edit away from being original.
+        Returns True if string is one or less edits away from being original.
 
 Example Usage:
 
+is_stream_at_EOF = write_to_buffer(file_stream, buffer, MAX_BUFFER_SIZE, NULL, " ");
+is_stream_at_EOF = write_to_buffer(file_stream, right_string, MAX_BUFFER_SIZE, NULL, " ");
+if(is_stream_at_EOF == True) break; // Stop test
 
+boolean_result = one_away(buffer, right_string);
+
+set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear buffer
+
+if(boolean_result == True){
+    printf("True.\n\n");
+}else{
+    printf("False.\n\n");
+}
 
 */
 
-    printf("<%s> <%s>\n", original, string);
-
     // LOCAL MEMORY
-    unsigned int len_original            = length_of_string(original);
-    unsigned int len_string              = length_of_string(string);
-    unsigned int original_frequency[128] = {0}; // Used to count the ASCII char frequency of original
-    unsigned int string_frequency[128]   = {0}; // Used to count the ASCII char frequency of string
+    unsigned int original_length                = length_of_string(original);
+    unsigned int string_length                  = length_of_string(string);
+    unsigned int original_reader                = 0;     // Indexing original
+    unsigned int string_reader                  = 0;     // Indexing string
+    bool one_difference_found                   = False; // Tracks if at least one difference was found
+    bool result                                 = True;  // Assumed to be True
 
     // CHECKS
-    if(abs(len_original - len_string) > 1) return False; // If the difference in length is greater than 1, return False.
+    if(abs(original_length - string_length) > 1) return False; // If either string is longer than 1 char than the other
 
-    return True;
+    printf("%s %s\n", original, string);
+
+    if(original_length - string_length == 1){ // Check if we are inserting
+        for(original_reader = 0, string_reader = 0; string_reader < string_length; original_reader++, string_reader++){
+            if((one_difference_found == True) && (original[original_reader] != string[string_reader]))
+                return False; // If we find more than one difference
+
+            if((one_difference_found == False) && (original[original_reader] != string[string_reader])){
+                original_reader++;
+                one_difference_found = True;
+            }
+        }
+    }else if(original_length - string_length == -1){ // Check if we are removing
+        for(original_reader = 0, string_reader = 0; original_reader < original_length; original_reader++, string_reader++){
+            if((one_difference_found == True) && (original[original_reader] != string[string_reader]))
+                return False; // If we find more than one difference
+
+            if((one_difference_found == False) && (original[original_reader] != string[string_reader])){
+                string_reader++;
+                one_difference_found = True;
+            }
+        }
+    }else if(original_length == string_length){ // Check if we are replacing
+        for(original_reader = 0, string_reader = 0; string_reader < string_length; original_reader++, string_reader++){
+            if((one_difference_found == True) && (original[original_reader] != string[string_reader]))
+                return False; // If we find more than one difference
+
+            if((one_difference_found == False) && (original[original_reader] != string[string_reader])){
+                one_difference_found = True;
+            }
+        }
+    }
+
+    return result;
 }
