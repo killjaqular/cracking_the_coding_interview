@@ -806,6 +806,59 @@ while(is_stream_at_EOF == False){
     return reached_EOF;
 }
 
+char* int_to_string(int given_integer, char as_string[]){
+/*
+void replace_char_new_string:
+    Replaces all instances of target_char in original_string with new_char making new_string
+
+Input:
+    char* original_string:
+        The original string.
+        ASSUMPTION: This string must be terminated with '\0'.
+    char* target_char:
+        The char to replace in original_string.
+    char new_string[]:
+        A new string with target_char replaced with new_char.
+    unsigned int new_string_size:
+        The size of new_string.
+    char* new_char:
+        The char to replace target_char in new_string.
+
+Output: None
+
+Example Usage:
+
+int my_int = -102938;
+char string_buffer[999] = {0};
+char* my_string = int_to_string(my_int, string_buffer);
+printf("%s\n", my_string);
+
+*/
+
+    // LOCAL MEMORY
+    char const digit[] = "0123456789";  // Used to write digits as chars
+    char* insert       = as_string;     // Pointer to the string representation of given_integer
+    int reader         = given_integer; // Used to advance insert to the end of as_string
+
+    if(given_integer < 0){   // If the given integer is negative,
+        *insert++ = '-';     // Insert the negative sign
+        given_integer *= -1; // Flip the negative bit
+    }
+
+    do{
+        ++insert;
+        reader = reader/10;
+    }while(reader);
+
+    *insert = '\0';
+    do{
+        *--insert = digit[given_integer%10]; // Insert the current left most digit
+        given_integer = given_integer/10;    // Chop off the digit just inserted
+    }while(given_integer);
+
+    return as_string;
+}
+
 // TODO: Finish this function
 void replace_char_new_string(char* original_string, char* target_char, char new_string[], unsigned int new_string_size, char* new_char){
 /*

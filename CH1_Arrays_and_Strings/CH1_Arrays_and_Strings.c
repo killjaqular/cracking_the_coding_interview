@@ -40,7 +40,10 @@ Chapter 1 Problems
                 pale, bale  -> true
                 pale, bake  -> true
 
-1.6
+1.6 String Compression: Implement a method to perform basic string using the counts of repeated characters. For
+                        example, the string aabcccccaaa would become a2b1c5a3. If the "compressed" string would not
+                        become smaller than the original string, your method should return the original string. You can
+                        assume the string has only uppercase and lowercase letters (a-z).
 
 1.7
 
@@ -75,6 +78,7 @@ bool check_permutation(const char* left_string, const char* right_string); // Ch
 void URLify(char string[], unsigned int size, const char* new_chars); // Replaces spaces in a string
 bool palindrome_permutation(const char* string); // Checks if a palindrome permutation is possible
 bool one_away(const char* original, const char* string); // Checks if string is no more than 1 edit away from original
+char* string_compression(const char* string); // Creates a string of each char with their frequency
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
@@ -221,7 +225,7 @@ int main(int argc, char** argv){
     fclose(file_stream);
 
     ////////////////////////////////////////////////////////////////
-    // 1.4 Palindrome Permutation
+    // 1.5 One Away
     printf("//////////////////\n");
     printf("// 1.5 One Away //\n");
     printf("//////////////////\n");
@@ -249,6 +253,37 @@ int main(int argc, char** argv){
                 printf("True.\n\n");
             }else{
                 printf("False.\n\n");
+            }
+        }
+    }
+    fclose(file_stream);
+
+    ////////////////////////////////////////////////////////////////
+    // 1.6 String Compression
+    printf("//////////////////\n");
+    printf("// 1.6 String Compression //\n");
+    printf("//////////////////\n");
+    ////////////////////////////////////////////////////////////////
+    boolean_result   = False;       // Used to flag if all chars in a string are unique
+    is_stream_at_EOF = False;       // Tracks if input has reached end
+    char* compressed_string = NULL; // Compressed string
+
+    file_stream = verify_file_stream_pointer(argv[6]); // Open the input file
+    if(file_stream != NULL) successful = True;         // Verify the file stream is valid
+
+    if(successful){
+        putchar('\n');
+        // If we haven't reached the end of the file,
+        while(is_stream_at_EOF != True){ // Read from file, write to buffer
+            is_stream_at_EOF = write_to_buffer(file_stream, buffer, MAX_BUFFER_SIZE, NULL, "\n");
+            if(is_stream_at_EOF == True) break; // Stop test
+
+            compressed_string = string_compression(buffer);
+
+            set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+
+            if(compressed_string != NULL){
+                printf("%s\n\n", compressed_string);
             }
         }
     }
@@ -616,4 +651,54 @@ if(boolean_result == True){
     }
 
     return result;
+}
+
+char* string_compression(const char* string){
+/*
+ASSUMPTION: string has a '\0' char in it to stop the while loops.
+char* string_compression:
+    Writes a char and the number of its occurances into a new string.
+
+Input:
+    const char* string:
+        The given string.
+
+Output:
+    char* pointer_compressed:
+        The compressed string if it is shorter than the original.
+    char* string:
+        The original string if compression is longer than the original.
+
+Example Usage:
+
+
+
+*/
+
+    // CHECKS
+    if(is_string_empty(string)) return NULL; // If string is empty, return nothing
+
+    // LOCAL MEMORY
+    unsigned int string_length          = length_of_string(string);
+    unsigned int insert                 = 0;   // Used to insert into the compressed string
+    char* frequency = (char*) malloc(char * string_length); // Counts the frequency of a char
+    const char* reader = string;
+
+    if(string_length == 1){
+        printf("%s1\n", string);
+        return NULL;
+    }else{
+        printf("%s\n", string);
+    }
+
+    while(strcmp(reader, "\0") != 0){
+        
+    }
+
+    for(insert = 0; insert < CHAR_TABLE; insert++){
+        if(frequency[insert]) printf("%c%d", insert, frequency[insert]);
+    }
+    printf("\n");
+
+    return NULL;
 }
