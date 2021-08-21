@@ -45,7 +45,8 @@ Chapter 1 Problems
                         become smaller than the original string, your method should return the original string. You can
                         assume the string has only uppercase and lowercase letters (a-z).
 
-1.7
+1.7 Rotate Matrix: Given an image represented by an NxN matric, where each pixel in the image is 4 bytes, write a
+                   method to rotate the image by 90 degrees. Can you do this in place?
 
 1.8
 
@@ -78,7 +79,8 @@ bool check_permutation(const char* left_string, const char* right_string); // Ch
 void URLify(char string[], unsigned int size, const char* new_chars); // Replaces spaces in a string
 bool palindrome_permutation(const char* string); // Checks if a palindrome permutation is possible
 bool one_away(const char* original, const char* string); // Checks if string is no more than 1 edit away from original
-char* string_compression(const char* string); // Creates a string of each char with their frequency
+char* string_compression(char* string); // Creates a string of each char with their frequency
+void rotate_matrix(char* matrix); // Rotates matrix 90* CW
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
@@ -89,6 +91,7 @@ int main(int argc, char** argv){
     char right_string[MAX_BUFFER_SIZE] = {0};   // Another buffer used to read the second string
     char buffer[MAX_BUFFER_SIZE]       = {0};   // The buffer used to read in the input file
     char* compressed_string            = NULL;  // Compressed string
+    char* char_2d_matrix               = NULL;  // 2D matrix of chars
     unsigned int string_size           = 0;     // Used to measure buffer
 
     FILE* all_tests                    = NULL;  // File with all test cases
@@ -145,8 +148,6 @@ int main(int argc, char** argv){
                 printf("// 1.2 Check Permutation //\n");
                 printf("///////////////////////////\n");
                 ////////////////////////////////////////////////////////////////
-                boolean_result   = False; // Used to flag if all chars in a string are unique
-                is_stream_at_EOF = False; // Tracks if input has reached end
 
                 while(is_stream_at_EOF != True){ // Read from file, write to buffer
                     is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, ".");
@@ -224,6 +225,7 @@ int main(int argc, char** argv){
 
                 while(is_stream_at_EOF != True){ // Read from file, write to buffer
                     is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, " ");
+                    if(is_stream_at_EOF == True) break; // Stop test
                     is_stream_at_EOF = write_to_buffer(current_test_input, right_string, MAX_BUFFER_SIZE, NULL, " ");
                     if(is_stream_at_EOF == True) break; // Stop test
 
@@ -261,6 +263,29 @@ int main(int argc, char** argv){
                     }
 
                     set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+
+                }
+            }
+
+            if(strcmp(buffer, "rotate_matrix.in") == 0){
+                ////////////////////////////////////////////////////////////////
+                // 1.7 Rotate Matrix
+                printf("///////////////////////\n");
+                printf("// 1.7 Rotate Matrix //\n");
+                printf("///////////////////////\n");
+                ////////////////////////////////////////////////////////////////
+
+                while(is_stream_at_EOF != True){ // Read from file, write to buffer
+                    char_2d_matrix = create_char_2d_square_matrix(current_test_input);
+                    rotate_matrix(char_2d_matrix);
+
+                    if(compressed_string != NULL){
+                        printf("%s\n\n", compressed_string);
+                    }else{
+                        printf("%s\n\n", buffer);
+                    }
+
+                    
 
                 }
             }
@@ -638,7 +663,7 @@ if(boolean_result == True){
     return result;
 }
 
-char* string_compression(const char* string){
+char* string_compression(char* string){
 /*
 ASSUMPTION: string has a '\0' char in it to stop the while loops.
 char* string_compression:
@@ -656,7 +681,18 @@ Output:
 
 Example Usage:
 
+FILE* current_test_input = fopen("some_file.txt", "r");
+unsigned int MAX_BUFFER = 256;
+char buffer[MAX_BUFFER] = {0};
+write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, "\n");
+compressed_string = string_compression(buffer);
+if(compressed_string != NULL){
+    printf("%s\n\n", compressed_string);
+}else{
+    printf("%s\n\n", buffer);
+}
 
+}
 
 */
 
@@ -696,6 +732,8 @@ Example Usage:
             insert++;
             // If in the generation of the compressed string, we discover the new string will be longer, return string
             if(insert > string_length){
+                compressed_string = NULL;
+                free(compressed_string);
                 return string;
             }
         }
@@ -703,4 +741,38 @@ Example Usage:
     }
 
     return compressed_string;
+}
+
+void rotate_matrix(char* matrix){
+/*
+void rotate_matrix: Time O(n), Space O(n), where n is the number of elements in matrix
+    Rotates all elements 90 degrees clockwise.
+
+Input:
+    const char matrix[][]:
+        The matrix to rotate.
+
+Output: None
+
+Example Usage:
+
+
+
+*/
+
+    // CHECKS
+    // None
+
+    // LOCAL MEMORY
+    unsigned int row    = 0; // Steps through the rows
+    unsigned int column = 0; // Steps through the columns
+    unsigned int total_range = sizeof(matrix[0]);
+
+    for(row = 0; row < total_range; row++){
+        for(column = 0; total_range; column++){
+            printf("%c", matrix[row + column]);
+        }
+    }
+
+    return;
 }

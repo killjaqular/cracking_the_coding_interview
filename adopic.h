@@ -841,19 +841,19 @@ printf("%s\n", my_string);
     int reader         = given_integer; // Used to advance insert to the end of as_string
 
     if(given_integer < 0){   // If the given integer is negative,
-        *insert++ = '-';     // Insert the negative sign
+        *insert++ = '-';     // Insert the negative sign and increment insert
         given_integer *= -1; // Flip the negative bit
     }
 
     do{
         ++insert;
-        reader = reader/10;
+        reader = reader / 10;
     }while(reader);
 
     *insert = '\0';
     do{
-        *--insert = digit[given_integer%10]; // Insert the current left most digit
-        given_integer = given_integer/10;    // Chop off the digit just inserted
+        *--insert = digit[given_integer % 10]; // Insert the current left most digit
+        given_integer = given_integer / 10;    // Chop off the digit just inserted
     }while(given_integer);
 
     return as_string;
@@ -862,7 +862,7 @@ printf("%s\n", my_string);
 // TODO: Finish this function
 void replace_char_new_string(char* original_string, char* target_char, char new_string[], unsigned int new_string_size, char* new_char){
 /*
-void replace_char_new_string:
+void replace_char_new_string: Time O(n), Space O(m), where n is length of original_string and m >= n
     Replaces all instances of target_char in original_string with new_char making new_string
 
 Input:
@@ -896,6 +896,99 @@ char target_char[2] = " \0";
     unsigned int insert;
 
     // TODO: finish this boi
+
+    return;
+}
+
+char* create_char_2d_square_matrix(FILE* input){
+/*
+char* create_char_2d_square_matrix: Time O(n), Space O(nn), where n is the number of char elements.
+
+Input:
+    FILE* input:
+        The stream to read input from.
+
+Output:
+    char** new_char_2d_matrix:
+        A dynamically allocated 2d array of chars.
+
+Example Usage:
+
+
+
+*/
+
+    // LOCAL MEMORY
+    unsigned int rows    = 0; // Steps through the rows
+    unsigned int columns = 0; // Steps through the columns
+
+    // DYNAMIC MEMORY
+    unsigned int total_range = 0; // Used to count the range of the NxN matrix
+    int reader               = 0; // Used to read in from the input
+    char as_char[2]          = "\0\0";
+
+    while((reader != EOF) && (strcmp(as_char, "\n") != 0)){
+        reader = getc(input);
+        as_char[0] = (char) reader; // Cast as a char for comparing
+        if(strcmp(as_char, "\n") != 0) total_range++; // Increment the number of elements
+    }
+
+    if(total_range == 0) return NULL; // If we don't read in a matrix
+
+printf("AAAAAAAA");
+
+    // DYNAMIC MEMORY
+    char* new_char_2d_matrix = (char*) malloc(sizeof(char)); // Alocate memory based on total_range
+    if(new_char_2d_matrix == NULL){
+        printf("BAD\n");
+    }else{
+        printf("GOOD\n");
+    }
+
+printf("BBBBBBBB");
+return new_char_2d_matrix;
+
+    rewind(input); // Rewind the input stream to the beginning so we can re-read the input
+
+    // Write chars into matrix
+    for(rows = 0; rows < total_range; rows++){
+        for(columns = 0; columns < total_range; columns++){
+            as_char[0] = getc(input);
+            strcpy(&new_char_2d_matrix[rows + columns], as_char);
+            printf("<%c>", new_char_2d_matrix[rows + columns]);
+        }
+    }
+
+    return new_char_2d_matrix;
+}
+
+void free_char_2d_square_matrix(char** matrix){
+/*
+void free_char_2d_square_matrix: Time O(n), Space O(nn), where n is the number of char elements.
+
+Input:
+    char** matrix:
+        The matrix to free.
+
+Output: None
+
+Example Usage:
+
+
+
+*/
+
+    // LOCAL MEMORY
+    unsigned int row    = 0; // Steps through rows
+    unsigned int column = 0; // Steps through columns
+
+    for(row; row < sizeof(matrix[0]); row++){
+        for(column = 0; column < sizeof(matrix[0]); column++){
+            matrix[row][column] = '\0'; // Replace data with a zero
+        }
+        free(matrix[row]);
+    }
+    free(matrix);
 
     return;
 }
