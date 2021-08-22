@@ -432,7 +432,7 @@ char_found = find_char(some_string_pointer, "X");
         }
     }
 
-    return False;
+    return result;
 }
 
 unsigned int find_char_first_index(char* string, char target_char){
@@ -535,7 +535,6 @@ first_word = copy_first_word(new_string);
     if(is_string_empty(string) == True) return NULL; // If *string is empty, return NULL
 
     // LOCAL MEMORY
-    int length_of_original = length_of_string(string);
     char target_char[2];
     strcpy(target_char, " ");
     unsigned int position_of_first_space = find_char_first_index(string, target_char[0]);
@@ -703,7 +702,6 @@ while(is_stream_at_EOF == False){
     int reader          = 0;     // Steps through the input file
     char as_char[2]     = {0};   // Used to cast the read int as a char for comparison
     unsigned int insert = 0;     // Used to insert into buffer
-    bool read_newline   = False; // Flag for reading newlines
     bool reached_EOF    = False; // Flag to determine if EOF was reached reading input
 
     if(input == NULL) return True; // If input stream is empty, return True
@@ -893,7 +891,7 @@ char target_char[2] = " \0";
 */
 
     // LOCAL MEMORY
-    unsigned int insert;
+    // unsigned int insert;
 
     // TODO: finish this boi
 
@@ -909,7 +907,7 @@ Input:
         The stream to read input from.
 
 Output:
-    char** new_char_2d_matrix:
+    char* new_char_2d_matrix:
         A dynamically allocated 2d array of chars.
 
 Example Usage:
@@ -921,8 +919,6 @@ Example Usage:
     // LOCAL MEMORY
     unsigned int rows    = 0; // Steps through the rows
     unsigned int columns = 0; // Steps through the columns
-
-    // DYNAMIC MEMORY
     unsigned int total_range = 0; // Used to count the range of the NxN matrix
     int reader               = 0; // Used to read in from the input
     char as_char[2]          = "\0\0";
@@ -935,40 +931,36 @@ Example Usage:
 
     if(total_range == 0) return NULL; // If we don't read in a matrix
 
-printf("AAAAAAAA");
-
+    printf("before malloc()\n");
     // DYNAMIC MEMORY
-    char* new_char_2d_matrix = (char*) malloc(sizeof(char)); // Alocate memory based on total_range
-    if(new_char_2d_matrix == NULL){
-        printf("BAD\n");
-    }else{
-        printf("GOOD\n");
-    }
-
-printf("BBBBBBBB");
-return new_char_2d_matrix;
+    char* new_char_2d_matrix = (char*) malloc(total_range * total_range); // Allocate memory based on total_range
+    printf("after malloc()\n");
+    return NULL;
 
     rewind(input); // Rewind the input stream to the beginning so we can re-read the input
 
     // Write chars into matrix
-    for(rows = 0; rows < total_range; rows++){
-        for(columns = 0; columns < total_range; columns++){
+    for(rows = 0; rows < total_range * total_range; rows += total_range){
+        for(columns = 0; columns <= total_range; columns++){
             as_char[0] = getc(input);
-            strcpy(&new_char_2d_matrix[rows + columns], as_char);
-            printf("<%c>", new_char_2d_matrix[rows + columns]);
+            if(strcmp(as_char, "\n") != 0){
+                strcpy(&new_char_2d_matrix[rows + columns], as_char);
+                printf("%c", new_char_2d_matrix[rows + columns]);
+            }
         }
+        printf("\n");
     }
 
     return new_char_2d_matrix;
 }
 
-void free_char_2d_square_matrix(char** matrix){
+void free_char_2d_square_matrix(char* matrix){
 /*
-void free_char_2d_square_matrix: Time O(n), Space O(nn), where n is the number of char elements.
+void free_char_2d_square_matrix: Time O(n), Space O(n), where n is the number of char elements.
 
 Input:
-    char** matrix:
-        The matrix to free.
+    char* matrix:
+        The matrix to destroy.
 
 Output: None
 
@@ -982,12 +974,13 @@ Example Usage:
     unsigned int row    = 0; // Steps through rows
     unsigned int column = 0; // Steps through columns
 
-    for(row; row < sizeof(matrix[0]); row++){
+    for(row = 0; row < sizeof(matrix[0]) * sizeof(matrix[0]); row += sizeof(matrix[0])){
         for(column = 0; column < sizeof(matrix[0]); column++){
-            matrix[row][column] = '\0'; // Replace data with a zero
+            matrix[row + column] = '\0'; // Replace data with a zero
         }
-        free(matrix[row]);
     }
+
+    matrix = NULL;
     free(matrix);
 
     return;
