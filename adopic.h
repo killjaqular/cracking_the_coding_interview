@@ -793,11 +793,7 @@ while(is_stream_at_EOF == False){
         insert++;                // Increment inserter
     }
 
-    if(isspace(buffer[insert - 1])){
-        buffer[--insert] = 0; // Overwrite the whitespace char at end
-    }else{
-        buffer[insert] = 0;
-    }
+    buffer[insert] = 0;
 
     if(reader == EOF) reached_EOF = True; // If we reached EOF
 

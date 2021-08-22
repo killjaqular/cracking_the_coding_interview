@@ -59,7 +59,7 @@ Chapter 1 Problems
 #include <ctype.h>
 
 // NON-STANDARD LIBRARIES
-#include "..\adopic.h"
+#include "../adopic.h"
 
 // MACROS
 #define True  1
@@ -109,138 +109,142 @@ int main(int argc, char** argv){
             if(is_stream_at_EOF == True){ // If we have read all test cases,
                 break;
             }
+
             current_test_input = verify_file_stream_pointer(buffer); // Open the input file
+
             if(current_test_input == NULL){
                 printf("Missing test case: %s\n", buffer);
                 break;
             }
 
-            // if(strcmp(buffer, "is_unique.in") == 0){
-            //     ////////////////////////////////////////////////////////////////
-            //     // 1.1 Is Unique
-            //     printf("///////////////////\n");
-            //     printf("// 1.1 Is Unique //\n");
-            //     printf("///////////////////\n");
-            //     ////////////////////////////////////////////////////////////////
+            printf("<%s>\n", buffer);
 
-            //     if(current_test_input != NULL){
-            //         // If we haven't reached the end of the file,
-            //         while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            //             is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, ".");
-            //             if(is_stream_at_EOF == True) break; // Stop test
+            if(strcmp(buffer, "is_unique.in") == 0){
+                ////////////////////////////////////////////////////////////////
+                // 1.1 Is Unique
+                printf("///////////////////\n");
+                printf("// 1.1 Is Unique //\n");
+                printf("///////////////////\n");
+                ////////////////////////////////////////////////////////////////
 
-            //             boolean_result = is_unique(buffer);
+                if(current_test_input != NULL){
+                    // If we haven't reached the end of the file,
+                    while(is_stream_at_EOF != True){ // Read from file, write to buffer
+                        is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, ".");
+                        if(is_stream_at_EOF == True) break; // Stop test
 
-            //             set_string_to_null(buffer, MAX_BUFFER_SIZE); // Reset the buffer after using it
-            //             if(boolean_result == True){
-            //                 printf("All unique characters.\n\n");
-            //             }else{
-            //                 printf("Not unique characters.\n\n");
-            //             }
-            //         }
-            //     }
-            // }
+                        boolean_result = is_unique(buffer);
 
-            // if(strcmp(buffer, "check_permutation.in") == 0){
-            //     ////////////////////////////////////////////////////////////////
-            //     // 1.2 Check Permutation
-            //     printf("///////////////////////////\n");
-            //     printf("// 1.2 Check Permutation //\n");
-            //     printf("///////////////////////////\n");
-            //     ////////////////////////////////////////////////////////////////
+                        set_string_to_null(buffer, MAX_BUFFER_SIZE); // Reset the buffer after using it
+                        if(boolean_result == True){
+                            printf("All unique characters.\n\n");
+                        }else{
+                            printf("Not unique characters.\n\n");
+                        }
+                    }
+                }
+            }
 
-            //     while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            //         is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, ".");
-            //         if(is_stream_at_EOF == True) break; // Stop test
-            //         is_stream_at_EOF = write_to_buffer(current_test_input, right_string, MAX_BUFFER_SIZE, NULL, ".");
-            //         if(is_stream_at_EOF == True) break; // Stop test
+            if(strcmp(buffer, "check_permutation.in") == 0){
+                ////////////////////////////////////////////////////////////////
+                // 1.2 Check Permutation
+                printf("///////////////////////////\n");
+                printf("// 1.2 Check Permutation //\n");
+                printf("///////////////////////////\n");
+                ////////////////////////////////////////////////////////////////
 
-            //         boolean_result = check_permutation(buffer, right_string);
+                while(is_stream_at_EOF != True){ // Read from file, write to buffer
+                    is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, ".");
+                    if(is_stream_at_EOF == True) break; // Stop test
+                    is_stream_at_EOF = write_to_buffer(current_test_input, right_string, MAX_BUFFER_SIZE, NULL, ".");
+                    if(is_stream_at_EOF == True) break; // Stop test
 
-            //         set_string_to_null(buffer, MAX_BUFFER_SIZE);       // Clear buffer
-            //         set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear right_string
+                    boolean_result = check_permutation(buffer, right_string);
 
-            //         if(boolean_result == True){
-            //             printf("Valid Permutation.\n\n");
-            //         }else{
-            //             printf("Invalid Permutation.\n\n");
-            //         }
-            //     }
-            // }
+                    set_string_to_null(buffer, MAX_BUFFER_SIZE);       // Clear buffer
+                    set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear right_string
 
-            // if(strcmp(buffer, "URLify.in") == 0){
-            //     ////////////////////////////////////////////////////////////////
-            //     // 1.3 URLify
-            //     printf("////////////////\n");
-            //     printf("// 1.3 URLify //\n");
-            //     printf("////////////////\n");
-            //     ////////////////////////////////////////////////////////////////
+                    if(boolean_result == True){
+                        printf("Valid Permutation.\n\n");
+                    }else{
+                        printf("Invalid Permutation.\n\n");
+                    }
+                }
+            }
 
-            //     // If we haven't reached the end of the file,
-            //     while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            //         is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, "\"", "\"");
-            //         string_size = length_of_string(buffer);
-            //         if(is_stream_at_EOF == True) break; // Stop test
+            if(strcmp(buffer, "URLify.in") == 0){
+                ////////////////////////////////////////////////////////////////
+                // 1.3 URLify
+                printf("////////////////\n");
+                printf("// 1.3 URLify //\n");
+                printf("////////////////\n");
+                ////////////////////////////////////////////////////////////////
 
-            //         URLify(buffer, string_size, "%20");
-            //         printf("%s\n", buffer);
+                // If we haven't reached the end of the file,
+                while(is_stream_at_EOF != True){ // Read from file, write to buffer
+                    is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, "\"", "\"");
+                    string_size = length_of_string(buffer);
+                    if(is_stream_at_EOF == True) break; // Stop test
 
-            //         set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+                    URLify(buffer, string_size, "%20");
+                    printf("%s\n", buffer);
 
-            //         printf("%s\n", buffer);
-            //     }
-            // }
+                    set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
 
-            // if(strcmp(buffer, "palindrome_permutation.in") == 0){
-            //     ////////////////////////////////////////////////////////////////
-            //     // 1.4 Palindrome Permutation
-            //     printf("////////////////////////////////\n");
-            //     printf("// 1.4 Palindrome Permutation //\n");
-            //     printf("////////////////////////////////\n");
-            //     ////////////////////////////////////////////////////////////////
+                    printf("%s\n", buffer);
+                }
+            }
 
-            //     while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            //         is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, "\n");
-            //         if(is_stream_at_EOF == True) break; // Stop test
+            if(strcmp(buffer, "palindrome_permutation.in") == 0){
+                ////////////////////////////////////////////////////////////////
+                // 1.4 Palindrome Permutation
+                printf("////////////////////////////////\n");
+                printf("// 1.4 Palindrome Permutation //\n");
+                printf("////////////////////////////////\n");
+                ////////////////////////////////////////////////////////////////
 
-            //         boolean_result = palindrome_permutation(buffer);
+                while(is_stream_at_EOF != True){ // Read from file, write to buffer
+                    is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, "\n");
+                    if(is_stream_at_EOF == True) break; // Stop test
 
-            //         set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+                    boolean_result = palindrome_permutation(buffer);
 
-            //         if(boolean_result == True){
-            //             printf("Palindrome Permutations possible.\n\n");
-            //         }else{
-            //             printf("Palindrome Permutations impossible.\n\n");
-            //         }
-            //     }
-            // }
+                    set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
 
-            // if(strcmp(buffer, "one_away.in") == 0){
-            //     ////////////////////////////////////////////////////////////////
-            //     // 1.5 One Away
-            //     printf("//////////////////\n");
-            //     printf("// 1.5 One Away //\n");
-            //     printf("//////////////////\n");
-            //     ////////////////////////////////////////////////////////////////
+                    if(boolean_result == True){
+                        printf("Palindrome Permutations possible.\n\n");
+                    }else{
+                        printf("Palindrome Permutations impossible.\n\n");
+                    }
+                }
+            }
 
-            //     while(is_stream_at_EOF != True){ // Read from file, write to buffer
-            //         is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, " ");
-            //         if(is_stream_at_EOF == True) break; // Stop test
-            //         is_stream_at_EOF = write_to_buffer(current_test_input, right_string, MAX_BUFFER_SIZE, NULL, " ");
-            //         if(is_stream_at_EOF == True) break; // Stop test
+            if(strcmp(buffer, "one_away.in") == 0){
+                ////////////////////////////////////////////////////////////////
+                // 1.5 One Away
+                printf("//////////////////\n");
+                printf("// 1.5 One Away //\n");
+                printf("//////////////////\n");
+                ////////////////////////////////////////////////////////////////
 
-            //         boolean_result = one_away(buffer, right_string);
+                while(is_stream_at_EOF != True){ // Read from file, write to buffer
+                    is_stream_at_EOF = write_to_buffer(current_test_input, buffer, MAX_BUFFER_SIZE, NULL, " ");
+                    if(is_stream_at_EOF == True) break; // Stop test
+                    is_stream_at_EOF = write_to_buffer(current_test_input, right_string, MAX_BUFFER_SIZE, NULL, " ");
+                    if(is_stream_at_EOF == True) break; // Stop test
 
-            //         set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
-            //         set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear buffer
+                    boolean_result = one_away(buffer, right_string);
 
-            //         if(boolean_result == True){
-            //             printf("True.\n\n");
-            //         }else{
-            //             printf("False.\n\n");
-            //         }
-            //     }
-            // }
+                    set_string_to_null(buffer, MAX_BUFFER_SIZE); // Clear buffer
+                    set_string_to_null(right_string, MAX_BUFFER_SIZE); // Clear buffer
+
+                    if(boolean_result == True){
+                        printf("True.\n\n");
+                    }else{
+                        printf("False.\n\n");
+                    }
+                }
+            }
 
             if(strcmp(buffer, "string_compression.in") == 0){
                 ////////////////////////////////////////////////////////////////
@@ -616,7 +620,7 @@ if(boolean_result == True){
     bool result                                 = True;  // Assumed to be True
 
     // CHECKS
-    if(abs(original_length - string_length) > 1) return False; // If either string is longer than 1 char than the other
+    if(original_length - string_length > 1) return False; // If either string is longer than 1 char than the other
 
     printf("%s %s\n", original, string);
 
@@ -756,10 +760,10 @@ return;
     // LOCAL MEMORY
     unsigned int row    = 0; // Steps through the rows
     unsigned int column = 0; // Steps through the columns
-    unsigned int total_range = sizeof(matrix[0]);
+    unsigned int total_range = strlen(matrix) / sizeof(matrix[0]);
 
-    for(row = 0; row < total_range * total_range; row += 4){
-        for(column = 0; total_range; column++){
+    for(row = 0; row < total_range * total_range; row += total_range){
+        for(column = 0; column < total_range; column++){
             printf("%c", matrix[row + column]);
         }
     }
