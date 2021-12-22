@@ -18,7 +18,7 @@ Chapter 1 Problems
             space at the end to hold the additional charcters, and that you are given the "true" length of the string.
             (Note: If implementing in Java, please use a character array so that you  can perform this operation in
             place.)
-            Example: 
+            Example:
                 Input:  "Mr John Smith    ", 13
                 Output: "Mr%20John%20Smith"
 
@@ -59,7 +59,7 @@ Chapter 1 Problems
 #include <ctype.h>
 
 // NON-STANDARD LIBRARIES
-#include "../adopic.h"
+#include "../../c/adopic.h"
 
 // MACROS
 #define True  1
