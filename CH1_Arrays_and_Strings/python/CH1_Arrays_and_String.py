@@ -73,6 +73,29 @@ Chapter 1 Problems
 # STANDARD LIBRARIES
 from sys import argv, stdin, stdout
 
+# CLASSES
+class Matrix:
+    def __init__(self):
+        self.domain = 0
+        self.range  = 0
+        self.matrix = list(list())
+
+    def insert_row(self, new_row):
+        self.matrix.append(new_row)
+        self.domain = len(new_row)
+        self.range += 1
+
+    def __str__(self):
+        str_rep = "" + "\n"
+
+        for row in self.matrix:
+            for cell in row:
+                str_rep += f'{cell}'
+            str_rep += "\n"
+
+        return str_rep
+
+# FUNCTIONS
 def is_unique(string):
     """
     is_unique: Checks if every char occurs no more than once.
@@ -86,7 +109,6 @@ def is_unique(string):
             return False
 
     return True
-
 def check_permutation(left_string, right_string):
     """
     check_permutation: Checks if left and right string can be permutations of each other.
@@ -108,7 +130,6 @@ def check_permutation(left_string, right_string):
             return False
 
     return True
-
 def URLify(string):
     """
     URLify: Replaces all spaces with %20.
@@ -121,7 +142,6 @@ def URLify(string):
     string = '"' + string.replace(" ", "%20") + '."'
 
     return string
-
 def palindrome_permutation(string):
     """
     palindrome_permutation: Checks if a string can be permutated into a palindrome.
@@ -146,47 +166,125 @@ def palindrome_permutation(string):
             return False
 
     return True
-
 def one_away(left_string, right_string):
     """
-
-    INPUT:  
-    OUTPUT: 
+    one_away: Checks if the two strings are at most 1 change away from being the same.
+    INPUT:    left_string - string,  A string to compare.
+    OUTPUT:   right_string - string, A string to compare.
     """
-    return True
+    stdout.write(f'\n{left_string}\n{right_string}\n')
 
+    one_difference = False
+
+    if (abs(len(left_string) - len(right_string)) > 1): return False
+
+    if len(left_string) == len(right_string):
+        for index in range(len(left_string)):
+            if left_string[index] != right_string[index] and not one_difference:
+                one_difference = True
+            elif left_string[index] != right_string[index] and one_difference:
+                return False
+
+    else:
+        short_string = min(len(left_string), len(right_string))
+        if len(left_string) == short_string:
+            short_string = left_string
+            long_string  = right_string
+        else:
+            short_string = right_string
+            long_string  = left_string
+
+        long_index = 0
+        for short_index in range(len(short_string)):
+            if short_string[short_index] != long_string[long_index] and not \
+               one_difference:
+                one_difference = True
+                long_index += 1
+
+            elif short_string[short_index] != long_string[long_index] and one_difference:
+                return False
+
+            long_index += 1
+
+    return True
 def string_compression(string):
     """
-
-    INPUT:  
-    OUTPUT: 
+    string_compression: Frequency compression of a string.
+    INPUT:              string - string, String to compress.
+    OUTPUT:             compressed_string - string, Final compressed string.
     """
+    stdout.write(f'\n{string}\n')
+
+    char_count = []
+    max_length = len(string)
+
+    index = 0
+    while index < len(string):
+        counter = 0
+        current_char = string[index]
+        while current_char == string[index]:
+            counter += 1
+            index  += 1
+            if index >= len(string): break
+
+        char_count.append((current_char, counter))
+
+    compressed_string = ""
+    for every_char in char_count:
+        compressed_string += every_char[0] + str(every_char[1])
+        if len(compressed_string) >= len(string):
+            return string
+
+    return compressed_string
+def rotate_matrix(matrix, depth):
+    """
+    rotate_matrix: Takes a square matrix and rotates all elements 90 degrees clock wise.
+    INPUT:         matrix - matrix, The matrix to rotate.
+                   depth  - int,    The domain of the matrix.
+    OUTPUT:        final_matrix - matrix, The final matrix.
+    """
+    stdout.write(f'\n{matrix}\n')
+
+    if depth < 0:
+        return final_matrix
+
     return True
-
-def rotate_matrix(matrix):
-    """
-
-    INPUT:  
-    OUTPUT: 
-    """
-    return True
-
 def zero_matrix(matrix):
     """
-
-    INPUT:  
-    OUTPUT: 
+    zero_matrix: Takes a square matrix and sets the row and column of a zero cell to
+                 zeros.
+    INPUT:       matrix - matrix, The matrix to scan.
+    OUTPUT:      final_matrix - matrix, The final matrix.
     """
-    return True
+    stdout.write(f'\n{matrix}\n')
 
+    original_zeros = []
+
+    for y, _ in enumerate(matrix.matrix):
+        for x, _ in enumerate(matrix.matrix):
+            if matrix.matrix[y][x] == 0:
+                original_zeros.append((y, x))
+
+    for every_zero in original_zeros:
+        # Zero row
+        for row in range(len(matrix.matrix)):
+            matrix.matrix[every_zero[0]][row] = 0
+        # Zero column
+        for column in range(len(matrix.matrix)):
+            matrix.matrix[column][every_zero[1]] = 0
+
+    return matrix
 def string_rotation(string):
     """
-
-    INPUT:  
-    OUTPUT: 
+    string_rotation: 
+    INPUT:           string - string, 
+    OUTPUT:          True if , else False
     """
-    return True
+    stdout.write(f'\n{string}\n')
 
+
+
+    return True
 def main():
     stdout.write(f"\n{argv[0]} executing\n")
 
@@ -302,6 +400,7 @@ def main():
             current_test = open(test_home + "/" + every_test, "r")
 
             for every_line in current_test.readlines():
+                every_line = every_line.rstrip()
                 stdout.write(f'{string_compression(every_line)}\n')
 
         if (every_test == "rotate_matrix.in"):
@@ -313,9 +412,15 @@ def main():
             ################################
 
             current_test = open(test_home + "/" + every_test, "r")
+            all_rows = []
 
-            for every_line in current_test.read():
-                stdout.write(f'{rotate_matrix(every_line)}\n')
+            current_matrix = Matrix()
+            for row in current_test.readlines():
+                row = row.rstrip()
+
+                current_matrix.insert_row(row)
+
+            stdout.write(f'\ncurrent_test\n{current_matrix}\n')
 
         if (every_test == "zero_matrix.in"):
             ################################
@@ -326,9 +431,15 @@ def main():
             ################################
 
             current_test = open(test_home + "/" + every_test, "r")
+            all_rows = []
 
-            for every_line in current_test.read():
-                stdout.write(f'{zero_matrix(every_line)}\n')
+            current_matrix = Matrix()
+            for row in current_test.readlines():
+                row = [int(cell) for cell in row.rstrip()]
+
+                current_matrix.insert_row(row)
+
+            stdout.write(f'{zero_matrix(current_matrix)}\n')
 
         if (every_test == "string_rotation.in"):
             ################################
@@ -340,7 +451,8 @@ def main():
 
             current_test = open(test_home + "/" + every_test, "r")
 
-            for every_line in current_test.read():
+            for every_line in current_test.readlines():
+                every_line = every_line.rstrip()
                 stdout.write(f'{string_rotation(every_line)}\n')
 
     stdout.write(f"\n{argv[0]} executed\n")
