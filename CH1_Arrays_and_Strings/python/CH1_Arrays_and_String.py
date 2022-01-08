@@ -29,8 +29,8 @@ Chapter 1 Problems
 1.4 Palindrome Permutation:
     Given a string, write a function to check if it is a permutation of a plindrome.
     A palindrome is a word or phrase that is the same forwards and backwards. A
-    permutation is a rearrangement of letters. The palindrome does not need to be limited
-    to just dictionary words.
+    permutation is a rearrangement of letters. The palindrome does not need to be
+    limited to just dictionary words.
 
     Example:
         Input:  Tact Coa
@@ -50,10 +50,10 @@ Chapter 1 Problems
 
 1.6 String Compression:
     Implement a method to perform basic string using the counts of repeated characters.
-    For example, the string aabcccccaaa would become a2b1c5a3. If the "compressed" string
-    would not become smaller than the original string, your method should return the
-    original string. You can assume the string has only uppercase and lowercase letters
-    (a-z).
+    For example, the string aabcccccaaa would become a2b1c5a3. If the "compressed"
+    string would not become smaller than the original string, your method should return
+    the original string. You can assume the string has only uppercase and lowercase
+    letters (a-z).
 
 1.7 Rotate Matrix:
     Given an image represented by an NxN matric, where each pixel in the image is 4
@@ -111,7 +111,8 @@ def is_unique(string):
     return True
 def check_permutation(left_string, right_string):
     """
-    check_permutation: Checks if left and right string can be permutations of each other.
+    check_permutation: Checks if left and right string can be permutations of each
+                       other.
     INPUT:             left_string  - string, A string to compare.
                        right_string - string, A string to compare.
     OUTPUT:            True if strings are permutations, otherwise False.
@@ -201,7 +202,8 @@ def one_away(left_string, right_string):
                 one_difference = True
                 long_index += 1
 
-            elif short_string[short_index] != long_string[long_index] and one_difference:
+            elif short_string[short_index] != long_string[long_index] and \
+            one_difference:
                 return False
 
             long_index += 1
