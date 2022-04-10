@@ -2,15 +2,16 @@
 """
 filename : createDirectories.py
 description :
-Creates a directory structure for a chapter in Cracking The Coding Interview
+Creates a directory structure for a chapter in Cracking The Coding Interview. The
+directories isolate the following languages:
+NASM, C, C++, Java, and Python.
 """
 # <Document_Header End>
 
 # <Standard Imports Start>
-from sys import argv, stdin, stdout
+from sys import argv
 import os
 # <Standard Imports End>
-
 
 # <Internal Imports Start>
 # NONE
@@ -44,6 +45,16 @@ def checkCLI(argv):
             exit()
 
 def createDirectories(chapterName, totalTests):
+    """
+    createDirectories: Creates directories and files needed for Cracking the Coding
+                       Interview problems.
+
+    INPUT:             chapterName - string, The chapter in Cracking the Coding
+                       Interview.
+                       totalTests  - int, Number of test cases for this chapter.
+
+    OUTPUT:            NONE
+    """
     # Make a top level directory for the new chapter
     os.mkdir(chapterName)
 

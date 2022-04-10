@@ -12,14 +12,15 @@ user@host:some/directory$: python3 <path to this file> <path to ch1.test>
 Cracking the Coding Interview:
 Chapter 1 Problems
 
-1.1 Is Unique:
+CH1.1 Is Unique:
     Implement an algorithm to determine if a string has all unique characters. What if
     you cannot use additional data structures?
 
-1.2 Check Permutation:
-    Given two strings, write a method to decide if one is a permutation of the other.
+CH1.2 Check Permutation:
+    Given two strings, write a method to decide if one is a possible permutation of the
+    other.
 
-1.3 URLify:
+CH1.3 URLify:
     Write a method to replace all spaces in a string with "%20". You may assume that
     the string has sufficient space at the end to hold the additional charcters, and
     that you are given the "true" length of the string. (Note: If implementing in Java,
@@ -29,7 +30,7 @@ Chapter 1 Problems
                 Input:  "Mr John Smith    ", 13
                 Output: "Mr%20John%20Smith"
 
-1.4 Palindrome Permutation:
+CH1.4 Palindrome Permutation:
     Given a string, write a function to check if it is a permutation of a plindrome.
     A palindrome is a word or phrase that is the same forwards and backwards. A
     permutation is a rearrangement of letters. The palindrome does not need to be
@@ -40,7 +41,7 @@ Chapter 1 Problems
         Output: True
         Permutations: "taco cat", "atco cta", etc...
 
-1.5 One Away:
+CH1.5 One Away:
     There are three type of edits that can be performed on strings: insert a character,
     remove a character, or replace a character. Given two strings, write a function to
     check if they are one edit (or zero edits) away.
@@ -51,22 +52,22 @@ Chapter 1 Problems
         pale, bale  -> true
         pale, bake  -> true
 
-1.6 String Compression:
+CH1.6 String Compression:
     Implement a method to perform basic string using the counts of repeated characters.
     For example, the string aabcccccaaa would become a2b1c5a3. If the "compressed"
     string would not become smaller than the original string, your method should return
     the original string. You can assume the string has only uppercase and lowercase
     letters (a-z).
 
-1.7 Rotate Matrix:
+CH1.7 Rotate Matrix:
     Given an image represented by an NxN matric, where each pixel in the image is 4
     bytes, write a method to rotate the image by 90 degrees. Can you do this in place?
 
-1.8 Zero Matrix:
+CH1.8 Zero Matrix:
     Write an algorithm such that if an element in an MxN matrix is 0, its entire row and
     column are set to 0.
 
-1.9 String Rotation:
+CH1.9 String Rotation:
     Assume you have a method isSubstring which checks if one word is a substring of
     another. Given two strings, s1 and s2, write code to check if s2 is a rotation of s1
     using only one call to isSubstring(e.g., "waterbottle" is a rotation of
@@ -237,17 +238,23 @@ def string_compression(string):
             return string
 
     return compressed_string
-def rotate_matrix(matrix, depth):
+def rotate_matrix(matrix):
     """
     rotate_matrix: Takes a square matrix and rotates all elements 90 degrees clock wise.
     INPUT:         matrix - matrix, The matrix to rotate.
-                   depth  - int,    The domain of the matrix.
     OUTPUT:        final_matrix - matrix, The final matrix.
     """
     stdout.write(f'\n{matrix}\n')
 
-    if depth < 0:
-        return final_matrix
+    if (len(matrix.matrix) == 0 or len(matrix.matrix) != len(matrix.matrix[0])):
+        return False
+
+    for layer in range(len(matrix.matrix) / 2):
+        first_cell = layer
+        last_cell  = len(matrix.matrix) - 1 - first_cell
+        for index in range(first_cell, last_cell):
+            offset = index - first_cell
+            
 
     return True
 def zero_matrix(matrix):
@@ -286,6 +293,7 @@ def string_rotation(string):
 
 
     return True
+
 def main():
     stdout.write(f"\n{argv[0]} executing\n")
 

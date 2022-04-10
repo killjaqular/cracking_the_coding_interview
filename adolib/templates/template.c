@@ -1,9 +1,6 @@
 /*
 Adonay Pichardo, adonaypichardo@gmail.com
 
-@file
-c_template.c
-
 @description
 Template file for all C source files.
 
@@ -11,53 +8,50 @@ Template file for all C source files.
 
 // STANDARD LIBRARIES
 #include <stdio.h>
+#include <stdlib.h>
 
 // NON-STANDARD LIBRARIES
-#include "adopic.h"
+// NONE
 
 // MACROS
 #define True  1
 #define False 0
 
 // GLOBAL VARIABLES
-bool boolean_result = False;
+// Place global variables here
 
 // STRUCTURES
-typedef struct program_arguments{
-    // Used to contain information about the arguments passed to the program
-    unsigned int argument_total_count;
-    char **arguments;
-}PROGRAM_ARGUMENTS_t;
+typedef struct some_structure{
+    // Description of the structure
+    int element;//Note what this element is for
+}SOME_STRUCTURE_t;
 
 // PROTOTYPES
-bool print_all_argv(PROGRAM_ARGUMENTS_t*); // Short comment describing the function
-PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS(void); // Initializes a PROGRAM_ARGUMENTS_t structure
-void set_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t*, unsigned int, char**); // Uses argc and argv to set values for program_arguments
-bool free_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t**); // Used to set all fields to NULL and free the memory for a PROGRAM_ARGUMENTS_t struct
+SOME_STRUCTURE_t* SOME_STRUCTURE_ini();//Initialize memory for a some_structure
+int  SOME_STRUCTURE_get(SOME_STRUCTURE_t*);//Get element from object
+void SOME_STRUCTURE_set(SOME_STRUCTURE_t*, int);//Set element in objec
+void SOME_STRUCTURE_pri(SOME_STRUCTURE_t*);//Print element in object
+void SOME_STRUCTURE_del(SOME_STRUCTURE_t*);//Delete entire object
 
 int main(int argc, char** argv){
     printf("\n\n%s executing\n\n", argv[0]);
 
-    // LOCAL MEMORY
-    bool successful = False;
+    // STACK MEMORY
+    // Stack memory used in main()
+    int element_value = 0;
+    SOME_STRUCTURE_t* structure = SOME_STRUCTURE_ini();
 
-    // DYNAMIC MEMORY
-    PROGRAM_ARGUMENTS_t* program_arguments;
-    program_arguments = init_PROGRAM_ARGUMENTS();
-    if(program_arguments != NULL){
-        printf("Initialized a PROGRAM_ARGUMENTS_t structure.\n");
-    }
+    // HEAP MEMORY
+    // Heap memory used in main()
 
-    set_PROGRAM_ARGUMENTS(program_arguments, argc, argv);
-    successful = print_all_argv(program_arguments);
-    if(successful){
-        printf("print_all_argv executed successfully.\n");
-    }
-    successful = False;
+    SOME_STRUCTURE_set(structure, 1337);
+    element_value = SOME_STRUCTURE_get(structure);
+    printf("element_value = %d\n", element_value);
+    SOME_STRUCTURE_pri(structure);
+    SOME_STRUCTURE_del(structure);
 
-    successful = free_PROGRAM_ARGUMENTS(&program_arguments);
-    if(program_arguments == NULL && successful == True){
-        printf("Freed a PROGRAM_ARGUMENTS_t structure.\n");
+    if(structure != NULL){
+        printf("structure = %x\n", structure->element);
     }
 
     printf("\n\n%s executed\n\n", argv[0]);
@@ -65,100 +59,102 @@ int main(int argc, char** argv){
 }
 
 // DEFINITIONS
-bool print_all_argv(PROGRAM_ARGUMENTS_t* given_program_arguments){
+//SOME_STRUCTURE_t//SOME_STRUCTURE_t//SOME_STRUCTURE_t//SOME_STRUCTURE_t//SOME_STRUCTURE_
+SOME_STRUCTURE_t* SOME_STRUCTURE_ini(void){
 /*
-bool print_all_argv:
-    Prints all arguments passed to program.
-
-Input:
-    PROGRAM_ARGUMENTS_t* given_program_arguments:
-        Contains all arguments passed to program.
-
-Output:
-    bool True:
-        Returns 1 if execution was successful.
+SOME_STRUCTURE_ini: malloc memory, set all fields 0 or NULL.
+Input: void.
+Output: new_some_structure - A new malloced struct with all fields set
+        to 0 or NULL..
+Example Usage:
+SOME_STRUCTURE_t* some_structure = SOME_STRUCTURE_init();
 */
+    // STACK MEMORY
+    // Stack memory used in SOME_STRUCTURE_ini()
 
-    // LOCAL MEMORY
-    unsigned int arg_counter;
+    // HEAP MEMORY
+    SOME_STRUCTURE_t* new_some_structure = (SOME_STRUCTURE_t*) malloc(sizeof(SOME_STRUCTURE_t));
 
-    printf("Arguments passed to %s\n", given_program_arguments->arguments[0]);
+    // Set all fields to 0 or NULL;
+    new_some_structure->element = 0;
 
-    for(arg_counter = 1; arg_counter < given_program_arguments->argument_total_count; arg_counter++){
-        printf("%s ", given_program_arguments->arguments[arg_counter]);
-    }
-    printf("\n");
-
-    return True;
+    return new_some_structure;
 }
-
-PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS(){
+int SOME_STRUCTURE_get(SOME_STRUCTURE_t* object){
 /*
-PROGRAM_ARGUMENTS_t* init_PROGRAM_ARGUMENTS:
-    Initializes a PROGRAM_ARGUMENTS_t structure.
-
-Input: void
-
-Output:
-    PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
-        A malloced PROGRAM_ARGUMENTS_t structure.
+SOME_STRUCTURE_get: Get get element of object.
+Input: object - The stucture from which to get the value of an element.
+Output: element_value - The value.
+Example Usage:
+int value = SOME_STRUCTURE_get(object);
 */
+    // STACK MEMORY
+    int element_value = 0;
 
-    // LOCAL MEMORY
-    // None
+    // HEAP MEMORY
+    // Heap memory used in SOME_STRUCTURE_get()
 
-    PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS = (PROGRAM_ARGUMENTS_t*) malloc(sizeof(PROGRAM_ARGUMENTS_t));
+    element_value = object->element;
 
-    return new_PROGRAM_ARGUMENTS;
+    return element_value;
 }
-
-void set_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t* program_arguments, unsigned int argc, char** argv){
+void SOME_STRUCTURE_set(SOME_STRUCTURE_t* object, int new_element){
 /*
-void set_PROGRAM_ARGUMENTS:
-    Uses argc and argv to set the values in program_arguments
-
-Input:
-    PROGRAM_ARGUMENTS_t* program_arguments:
-        Will contain argc and argv values.
-    unsigned int argc:
-        Total number of arguments passed to the program.
-    char** argv:
-        The arguments passed to the program.
-
-Output: PROGRAM_ARGUMENTS_t* new_PROGRAM_ARGUMENTS:
-        A malloced PROGRAM_ARGUMENTS_t structure.
+SOME_STRUCTURE_set: Get set element of object.
+Input: object     - The stucture for which to set the value of an element.
+       new_elment - The new value to set.
+Output: void.
+Example Usage:
+SOME_STRUCTURE_set(object, 1337);
 */
+    // STACK MEMORY
+    // Stack memory used in SOME_STRUCTURE_set()
 
-    // LOCAL MEMORY
-    // None
+    // HEAP MEMORY
+    // Heap memory used in SOME_STRUCTURE_set()
 
-    program_arguments->argument_total_count = argc;
-    program_arguments->arguments = argv;
+    object->element = new_element;
 
     return;
 }
-
-bool free_PROGRAM_ARGUMENTS(PROGRAM_ARGUMENTS_t** program_arguments){
+void SOME_STRUCTURE_pri(SOME_STRUCTURE_t* object){
 /*
-bool set_PROGRAM_ARGUMENTS:
-    Uses argc and argv to set the values in program_arguments
-
-Input:
-    PROGRAM_ARGUMENTS_t* program_arguments:
-        The PROGRAM_ARGUMENTS_t structure to delete.
-
-Output:
-    bool True:
-        Returns 1 if execution was successful.
+SOME_STRUCTURE_pri: Prints a field of object.
+Input: object - The structure from which to print.
+Output: void.
+Example Usage:
+SOME_STRUCTURE_pri(object);
 */
+    // STACK MEMORY
+    // Stack memory used in SOME_STRUCTURE_pri()
 
-    // LOCAL MEMORY
-    // None
+    // HEAP MEMORY
+    // Heap memory used in SOME_STRUCTURE_pri()
 
-    (*program_arguments)->argument_total_count = 0;
-    (*program_arguments)->arguments = 0;
-    (*program_arguments) = NULL;
-    free((*program_arguments));
+    printf("object->element = %d\n", object->element);
 
-    return True;
+    return;
+}
+void SOME_STRUCTURE_del(SOME_STRUCTURE_t* object){
+/*
+SOME_STRUCTURE_del: Sets all elements to 0 or NULL, NULLs the pointer and frees memory.
+Input: object - The structure to free.
+Output: void.
+Example Usage:
+SOME_STRUCTURE_del(object);
+*/
+    // STACK MEMORY
+    // Stack memory used in SOME_STRUCTURE_del()
+
+    // HEAP MEMORY
+    // Heap memory used in SOME_STRUCTURE_del()
+
+    // Set all fields to 0 or NULL
+    object->element = 0;
+
+    // Free and NULL pointer to avoid Use-After-Free
+    object = NULL;
+    free(object);
+
+    return;
 }
