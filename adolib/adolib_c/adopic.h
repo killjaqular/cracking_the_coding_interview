@@ -1,12 +1,8 @@
 /*
 Adonay Pichardo, adonaypichardo@gmail.com
 
-@file
-adopic.h
-
 @description
 Custom structures and functions
-
 */
 
 // STANDARD LIBRARIES
@@ -18,7 +14,7 @@ Custom structures and functions
 
 // MACROS
 #define DEFAULT_BUFFER 128 //used as a DEFAULT_buffer for reading string input from stdin
-#define True 1 //used as a boolean True value
+#define True  1 //used as a boolean True value
 #define False 0 //used as a boolean False value
 
 // GLOBAL VARIABLES
@@ -355,7 +351,8 @@ is_string_empty = is_string_empty(some_string_pointer);
     // LOCAL MEMORY
     bool result = False;
 
-    if((string == NULL) || (*string == EOF) || (*string == '\0') || (*string == '\n')) result = True;
+    if((string == NULL) || (*string == EOF) || (*string == '\0') || (*string == '\n'))
+        result = True;
 
     return result;
 }
@@ -1061,58 +1058,6 @@ int main(int argc, char** argv){
     }
 
     return result;
-}
-
-FILE* verify_file_stream_pointer(char *file_name){
-/*
-FILE* verify_file_stream_pointer:
-    checks if file stream pointer exists, returns a file pointer if it does, exits the program otherwise
-
-Input:
-    char *file_name:
-        The name of the file to be opened.
-Output:
-    FILE* FILE_STREAM:
-        The file stream that was successfully opened.
-
-Example Usage:
-int main(int argc, char** argv){
-
-    FILE* file_stream = NULL;
-    file_stream = verify_file_stream_pointer(argv[1]);
-    if(file_stream != NULL) successful = True;
-    int reader;
-    char buffer[256] = "\0";
-    unsigned int counter = 0;
-    if(successful){
-        while((reader = getc(file_stream)) != EOF){
-            putchar(reader);
-            buffer[counter] = reader;
-            counter++;
-        }
-    }
-    fclose(file_stream);
-
-    return 0;
-}
-*/
-
-    // LOCAL MEMORY
-    // None
-
-    FILE *FILE_STREAM = fopen(file_name, "r"); // Opens a file in read only and returns a pointer to that file, otherwise returns NULL pointer
-
-    if(FILE_STREAM == NULL){ // If FILE_STREAM is NULL,
-        printf("\nERROR:_> FROM:_> verify_file_stream_pointer:_> %s WAS NOT FOUND.\n", file_name);
-        fclose(FILE_STREAM); // Close FILE_STREAM stream
-    }else if(getc(FILE_STREAM) == EOF){ // If FILE_STREAM is empty
-        printf("\nERROR:_> FROM:_> verify_file_stream_pointer:_> %s IS EMPTY.\n", file_name);
-        fclose(FILE_STREAM); // Close FILE_STREAM stream
-    }else{ //otherwise,
-        rewind(FILE_STREAM); // Place DEFAULT_buffer to the beginning of FILE_STREAM pointer
-    }
-
-    return FILE_STREAM;
 }
 
 bool print_all_argv(PROGRAM_ARGUMENTS_t* given_program_arguments){
